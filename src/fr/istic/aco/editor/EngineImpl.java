@@ -1,15 +1,35 @@
 package fr.istic.aco.editor;
 
 public class EngineImpl implements Engine {
+    private StringBuilder buffer;
+    private String clipboard;
+    private SelectionImpl selection ; 
+    /*constructeur de la classe */
+    public EngineImpl(){
+        buffer= new StringBuilder();
+        clipboard ="";
+        selection = new SelectionImpl( buffer);
+    }
+
+    /**
+     * Inserts a string in the buffer, which replaces the contents of the selection
+     *
+     * @param s the text to insert
+     */
+    @Override
+    public void insert(String s) {
+        buffer.append(s);
+    }
+
     /**
      * Provides access to the selection control object
      *
      * @return the selection object
      */
     @Override
-    public Selection getSelection() {
-        // TODO
-        return null;
+    public Selection getSelection() {   
+        
+        return selection;
     }
 
     /**
@@ -18,9 +38,9 @@ public class EngineImpl implements Engine {
      * @return a copy of the buffer's contents
      */
     @Override
-    public String getBufferContents() {
-        // TODO
-        return null;
+   
+   public String getBufferContents() {
+        return buffer.toString();
     }
 
     /**
@@ -63,16 +83,7 @@ public class EngineImpl implements Engine {
         // TODO
     }
 
-    /**
-     * Inserts a string in the buffer, which replaces the contents of the selection
-     *
-     * @param s the text to insert
-     */
-    @Override
-    public void insert(String s) {
-
-    }
-
+    
     /**
      * Removes the contents of the selection in the buffer
      */

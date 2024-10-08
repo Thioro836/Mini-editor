@@ -27,7 +27,6 @@ class EngineTest {
 
     @Test
     void getBufferContents() {
-        setUp();
         engine.insert("fatou");
         Selection selection = engine.getSelection();
         assertEquals("fatou", engine.getBufferContents(),"Failure of insert");
@@ -87,6 +86,17 @@ class EngineTest {
         assertEquals(8,selection.getEndIndex());
     }
     @Test
+    void insert(String s){
+        Selection selection = engine.getSelection();
+        engine.insert("abcdef"); 
+        selection.setBeginIndex(0);
+        selection.setEndIndex(3);
+        assertEquals("sdef", engine.getBufferContents(),"Buffer should content 'sdef' after insert ");
+        assertEquals(1, selection.getBeginIndex());
+        assertEquals(1, selection.getEndIndex());
+        assertEquals(4, selection.getBufferEndIndex());
+    }
+    @Test
     void delete(){
         Selection selection = engine.getSelection();
         engine.insert("abcdef");
@@ -96,20 +106,5 @@ class EngineTest {
         assertEquals("adef", engine.getBufferContents(),"Buffer should content 'adef' after delete");
         assertEquals(2, selection.getBeginIndex());
         assertEquals(2, selection.getEndIndex());
-    }
-    @Test
-    void insert(String s){
-        Selection selection = engine.getSelection();
-        engine.insert("abcdef"); 
-        selection.setBeginIndex(0);
-        selection.setEndIndex(3);
-        engine.cutSelectedText();
-        assertEquals("sdef", engine.getBufferContents(),"Buffer should content 'sdef' after insert ");
-        assertEquals(1, selection.getBeginIndex());
-        assertEquals(1, selection.getEndIndex());
-        assertEquals(4, selection.getBufferEndIndex());
-
-
-
     }
 }
