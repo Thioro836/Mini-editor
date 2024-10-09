@@ -51,7 +51,7 @@ public class EngineImpl implements Engine {
     @Override
     public String getClipboardContents() {
         // TODO
-        return null;
+        return clipboard.toString();
     }
 
     /**
@@ -61,7 +61,9 @@ public class EngineImpl implements Engine {
      */
     @Override
     public void cutSelectedText() {
-        // TODO
+       clipboard = buffer.substring(selection.getBeginIndex(), selection.getEndIndex());
+       delete();
+      
     }
 
     /**
@@ -71,7 +73,8 @@ public class EngineImpl implements Engine {
      */
     @Override
     public void copySelectedText() {
-        // TODO
+    clipboard=buffer.substring(selection.getBeginIndex(), selection.getEndIndex());
+
     }
 
     /**
@@ -80,7 +83,8 @@ public class EngineImpl implements Engine {
      */
     @Override
     public void pasteClipboard() {
-        // TODO
+    insert(clipboard);
+        
     }
 
     
@@ -89,6 +93,7 @@ public class EngineImpl implements Engine {
      */
     @Override
     public void delete() {
-
+        buffer.delete(selection.getBeginIndex(),selection.getEndIndex());
+        selection.setEndIndex(selection.getBeginIndex());
     }
 }
