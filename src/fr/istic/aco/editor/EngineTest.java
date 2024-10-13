@@ -97,7 +97,7 @@ class EngineTest {
         engine.delete();
         assertEquals("abcef", engine.getBufferContents(),"Buffer should content 'adef' after delete");
         assertEquals(3, selection.getBeginIndex());
-        assertEquals(3, selection.getEndIndex());
+        assertEquals(3, selection.getEndIndex()); 
     }
     @Test
     void testSetBeginIndexNegative() {
