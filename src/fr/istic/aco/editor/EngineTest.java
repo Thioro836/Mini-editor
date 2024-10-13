@@ -8,10 +8,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class EngineTest {
 
     private Engine engine;
-
+    private Selection selection;
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
         engine = new EngineImpl();
+         selection = engine.getSelection();
     }
 
     private void todo() {
@@ -20,7 +21,6 @@ class EngineTest {
     @Test
     @DisplayName("Buffer must be empty after initialisation")
     void getSelection() {
-        Selection selection = engine.getSelection();
         assertEquals(selection.getBufferBeginIndex(),selection.getBeginIndex());
         assertEquals("",engine.getBufferContents());
     }
@@ -28,14 +28,12 @@ class EngineTest {
     @Test
     void getBufferContents() {
         engine.insert("fatou");
-        Selection selection = engine.getSelection();
         assertEquals("fatou", engine.getBufferContents(),"Failure of insert");
         assertEquals(5,selection.getBufferEndIndex());
     }
 
     @Test
     void getClipboardContents() {
-        Selection selection = engine.getSelection();
         engine.insert("abcdef");
         selection.setBeginIndex(0);
         selection.setEndIndex(2);
@@ -46,7 +44,6 @@ class EngineTest {
 
     @Test
     void cutSelectedText() {
-        Selection selection = engine.getSelection();
         engine.insert("abcdef");
         selection.setBeginIndex(0);
         selection.setEndIndex(2);
@@ -59,7 +56,6 @@ class EngineTest {
 
     @Test
     void copySelectedText() {
-        Selection selection = engine.getSelection();
         engine.insert("abcdef");
         selection.setBeginIndex(0);
         selection.setEndIndex(2);
@@ -70,41 +66,43 @@ class EngineTest {
         assertEquals("abcdef", engine.getBufferContents(),"buffer should remain unchanged after copy");
       
     }
-
+    @Test
+      void insert(){
+        engine.insert("abcdef"); 
+        assertEquals("abcdef", engine.getBufferContents(),"Buffer should content 'sdef' after insert ");
+        assertEquals(6, selection.getBeginIndex());
+        assertEquals(6, selection.getEndIndex());
+       
+    }
     @Test
     void pasteClipboard() {
-        Selection selection = engine.getSelection();
-        engine.insert("abcdef");
-        selection.setBeginIndex(1);
-        selection.setEndIndex(3);
-        engine.copySelectedText();
-        selection.setBeginIndex(5);
-        selection.setEndIndex(6);
-        engine.pasteClipboard();
-        assertEquals("abcdefbc", engine.getBufferContents(),"buffer should content 'abcdefbc' after paste");
-        assertEquals(8, selection.getBeginIndex());
-        assertEquals(8,selection.getEndIndex());
-    }
-    @Test
-    void insert(String s){
-        Selection selection = engine.getSelection();
-        engine.insert("abcdef"); 
+        engine.insert("bcdefg");
         selection.setBeginIndex(0);
-        selection.setEndIndex(3);
-        assertEquals("sdef", engine.getBufferContents(),"Buffer should content 'sdef' after insert ");
-        assertEquals(1, selection.getBeginIndex());
-        assertEquals(1, selection.getEndIndex());
-        assertEquals(4, selection.getBufferEndIndex());
+        selection.setEndIndex(2);
+        engine.copySelectedText();
+        // Collage à la position 5
+        selection.setBeginIndex(5);
+        selection.setEndIndex(5);
+        engine.pasteClipboard();
+         assertEquals("bcdefbcg", engine.getBufferContents(), "Le buffer devrait contenir 'bcdefbcg' après le collage");
+        assertEquals(7, selection.getBeginIndex());
+        assertEquals(7, selection.getEndIndex());
     }
+    
     @Test
     void delete(){
-        Selection selection = engine.getSelection();
         engine.insert("abcdef");
-        selection.setBeginIndex(1);
-        selection.setEndIndex(3);
+        selection.setBeginIndex(3);
+        selection.setEndIndex(4);
         engine.delete();
-        assertEquals("adef", engine.getBufferContents(),"Buffer should content 'adef' after delete");
-        assertEquals(2, selection.getBeginIndex());
-        assertEquals(2, selection.getEndIndex());
+        assertEquals("abcef", engine.getBufferContents(),"Buffer should content 'adef' after delete");
+        assertEquals(3, selection.getBeginIndex());
+        assertEquals(3, selection.getEndIndex());
     }
+    @Test
+    void testSetBeginIndexNegative() {
+    assertThrows(IndexOutOfBoundsException.class, () -> {
+        selection.setBeginIndex(-1); // Tenter de définir un index négatif
+    });
+}
 }

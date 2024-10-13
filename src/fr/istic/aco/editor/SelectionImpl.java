@@ -6,13 +6,18 @@ public class SelectionImpl implements Selection {
     private Integer beginIndex;
     private Integer endIndex;
     private Integer bufferBeginIndex;
-
-    public SelectionImpl(StringBuilder buffer){
-
+    public SelectionImpl(){
+        this.buffer=new StringBuilder();
         this.beginIndex = 0;
         this.endIndex = 0;
         this.bufferBeginIndex = 0; 
-        this.buffer=buffer;  
+
+    }
+    public SelectionImpl(StringBuilder buffer){
+      this.buffer=buffer;
+      this.beginIndex = 0;
+      this.endIndex = 0;
+      this.bufferBeginIndex = 0;   
     }
    /**
      * Provides the index of the first character designated
@@ -61,6 +66,9 @@ public class SelectionImpl implements Selection {
      * @throws IndexOutOfBoundsException if the beginIndex is out of bounds
      */
     public void setBeginIndex(int beginIndex) {
+        if (beginIndex < 0 || beginIndex > buffer.length()) {
+            throw new IndexOutOfBoundsException("Begin index out of bounds");
+        }
         this.beginIndex=beginIndex;
         
     }
@@ -72,6 +80,9 @@ public class SelectionImpl implements Selection {
      */
 
     public void setEndIndex(int endIndex) {
+        if(endIndex<beginIndex){
+            throw new IndexOutOfBoundsException("end index must be bigger than beginIndex");
+        }
        this.endIndex=endIndex;
         
     }

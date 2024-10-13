@@ -18,7 +18,12 @@ public class EngineImpl implements Engine {
      */
     @Override
     public void insert(String s) {
-        buffer.append(s);
+        // Insérer la chaîne à l'indice du début de la sélection
+        buffer.insert(selection.getBeginIndex(), s);
+        // Mettre à jour les indices de la sélection
+        int newEndIndex = selection.getBeginIndex() + s.length();
+        selection.setEndIndex(newEndIndex);
+        selection.setBeginIndex(newEndIndex);
     }
 
     /**
@@ -83,8 +88,12 @@ public class EngineImpl implements Engine {
      */
     @Override
     public void pasteClipboard() {
-    insert(clipboard);
-        
+        int insertPos = selection.getBeginIndex();
+        buffer.insert(insertPos, clipboard);
+        int newEndIndex = insertPos + clipboard.length();
+        selection.setBeginIndex(newEndIndex);
+        selection.setEndIndex(newEndIndex);
+       
     }
 
     
