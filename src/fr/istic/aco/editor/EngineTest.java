@@ -105,4 +105,9 @@ class EngineTest {
         selection.setBeginIndex(-1); // Tenter de définir un index négatif
     });
 }
+
+@Test
+    void testInsertNull() {
+        assertThrows(NullPointerException.class, () -> engine.insert(null), "L'insertion d'une valeur null devrait lancer une exception.");
+    }
 }

@@ -2,16 +2,16 @@ package fr.istic.aco.editor;
 
 public class SelectionCommand implements Command {
 private Selection selection;
-private int begin, end;
-public SelectionCommand (Selection selection, int begin,int end ){
+private Invoker inv;
+public SelectionCommand (Selection selection, Invoker inv ){
     this.selection=selection;
-    this.begin=begin;
-    this.end=end;
+    this.inv=inv;
 }
     @Override
     public void execute() {
-        selection.setBeginIndex(begin);
-        selection.setEndIndex(end);
+       
+        selection.setBeginIndex(inv.getBeginIndex());
+        selection.setEndIndex(inv.getEndIndex());
     }
     
 }

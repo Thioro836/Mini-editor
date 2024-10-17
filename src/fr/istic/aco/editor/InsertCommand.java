@@ -2,18 +2,17 @@ package fr.istic.aco.editor;
 
     public class InsertCommand implements Command{
     private Engine engine;
+    private Invoker inv;
     private String  textToInsert;
-    public InsertCommand(Engine engine){
+    public InsertCommand(Engine engine, Invoker inv){
         this.engine=engine;
+        this.inv = inv;
         
     }
-     // Méthode pour définir le texte à insérer
-     public void setText(String text) {
-        this.textToInsert = text;
-    }
+
         @Override
         public void execute() {
-        engine.insert(textToInsert);
+        engine.insert(inv.getTextToInsert());
         }
         
     }

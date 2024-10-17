@@ -80,8 +80,8 @@ public class SelectionImpl implements Selection {
      */
 
     public void setEndIndex(int endIndex) {
-        if(endIndex<beginIndex){
-            throw new IndexOutOfBoundsException("end index must be bigger than beginIndex");
+        if(endIndex < beginIndex || endIndex > buffer.length()){
+            throw new IndexOutOfBoundsException(" end index must be greater than or equal to beginIndex or end index out of bounds");
         }
        this.endIndex=endIndex;
         
