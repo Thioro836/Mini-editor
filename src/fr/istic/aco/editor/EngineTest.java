@@ -69,7 +69,7 @@ class EngineTest {
     @Test
       void insert(){
         engine.insert("abcdef"); 
-        assertEquals("abcdef", engine.getBufferContents(),"Buffer should content 'sdef' after insert ");
+        assertEquals("abcdef", engine.getBufferContents(),"Buffer should content 'abcdef' after insert ");
         assertEquals(6, selection.getBeginIndex());
         assertEquals(6, selection.getEndIndex());
        

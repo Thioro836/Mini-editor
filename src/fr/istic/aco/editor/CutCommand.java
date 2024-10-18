@@ -2,8 +2,10 @@ package fr.istic.aco.editor;
 
 public class CutCommand implements Command {
 private Engine engine;
-public CutCommand (Engine engine){
+private Selection selection;
+public CutCommand (Engine engine, Selection selection){
     this.engine=engine;
+    this.selection=selection;
 }
     @Override
     public void execute() {

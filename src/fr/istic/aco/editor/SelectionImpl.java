@@ -66,12 +66,12 @@ public class SelectionImpl implements Selection {
      * @throws IndexOutOfBoundsException if the beginIndex is out of bounds
      */
     public void setBeginIndex(int beginIndex) {
-        if (beginIndex < 0 || beginIndex > buffer.length()) {
+        if (beginIndex < 0) {
             throw new IndexOutOfBoundsException("Begin index out of bounds");
         }
-        this.beginIndex=beginIndex;
-        
+        this.beginIndex = beginIndex;
     }
+    
     /**
      * Changes the value of the end index of the selection
      *
@@ -79,12 +79,11 @@ public class SelectionImpl implements Selection {
      * @throws IndexOutOfBoundsException if the beginIndex is out of bounds
      */
 
-    public void setEndIndex(int endIndex) {
-        if(endIndex < beginIndex || endIndex > buffer.length()){
-            throw new IndexOutOfBoundsException(" end index must be greater than or equal to beginIndex or end index out of bounds");
+     public void setEndIndex(int endIndex) {
+        if (endIndex < beginIndex ) {
+            throw new IndexOutOfBoundsException("End index must be greater than or equal to beginIndex and within buffer range");
         }
-       this.endIndex=endIndex;
-        
+        this.endIndex = endIndex;
     }
     
 }
