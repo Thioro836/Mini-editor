@@ -66,7 +66,7 @@ public class SelectionImpl implements Selection {
      * @throws IndexOutOfBoundsException if the beginIndex is out of bounds
      */
     public void setBeginIndex(int beginIndex) {
-        if (beginIndex < 0) {
+        if (beginIndex < 0 ) {
             throw new IndexOutOfBoundsException("Begin index out of bounds");
         }
         this.beginIndex = beginIndex;
@@ -80,7 +80,7 @@ public class SelectionImpl implements Selection {
      */
 
      public void setEndIndex(int endIndex) {
-        if (endIndex < beginIndex ) {
+        if (endIndex < beginIndex || endIndex >buffer.length() ) {
             throw new IndexOutOfBoundsException("End index must be greater than or equal to beginIndex and within buffer range");
         }
         this.endIndex = endIndex;

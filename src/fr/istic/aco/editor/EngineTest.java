@@ -34,7 +34,7 @@ class EngineTest {
 
     @Test
     void getClipboardContents() {
-        engine.insert("abcdef");
+         engine.insert("abcdef");
         selection.setBeginIndex(0);
         selection.setEndIndex(2);
         engine.copySelectedText();

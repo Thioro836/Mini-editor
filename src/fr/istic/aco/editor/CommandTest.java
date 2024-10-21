@@ -13,7 +13,7 @@ public class CommandTest {
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
         engine = new EngineImpl();
-        selection = new SelectionImpl();
+        selection = engine.getSelection();
         invoker = new Invoker(engine, selection);
     }
 
@@ -59,24 +59,57 @@ public class CommandTest {
     @Test
     void CopyCommandTest() {
         invoker.setTextToInsert("abcd");
-        invoker.playCommand("insert");
-        System.out.println(engine.getBufferContents());
-        // Avant d'exécuter la commande de sélection
-        System.out.println("Sélection avant commande copy: Begin Index: " + selection.getBeginIndex() + ", End Index: "
-                + selection.getEndIndex());
-
+          invoker.playCommand("insert");
         // Avant d'exécuter la commande de copie
         invoker.setBeginIndex(0);
-        selection.setEndIndex(2); // Sélectionne tout le texte disponible
+        invoker.setEndIndex(2); // Sélectionne tout le texte disponible
         invoker.playCommand("selection");
 
-        System.out.println("Indices de sélection avant copie: Begin Index: " + selection.getBeginIndex()
-                + ", End Index: " + selection.getEndIndex());
         invoker.playCommand("copy");
-        System.out.println("Clipboard après copy: " + engine.getClipboardContents());
 
         assertEquals("ab", engine.getClipboardContents());
+        assertEquals("abcd", engine.getBufferContents());
 
+    }
+
+    @Test
+    void cutCommandTest() {
+        invoker.setTextToInsert("abcdefg");
+        invoker.playCommand("insert");
+
+        // Avant d'exécuter la commande de copie
+        invoker.setBeginIndex(2);
+        invoker.setEndIndex(5);
+        invoker.playCommand("selection");
+
+        invoker.playCommand("cut");
+
+        assertEquals("cde", engine.getClipboardContents());
+        assertEquals("abfg", engine.getBufferContents());
+
+    }
+    @Test 
+    void pasteCommandTest(){
+        //insérer dans le buffer
+        invoker.setTextToInsert("abcdef");
+        invoker.playCommand("insert");
+        //faire la sélection
+        invoker.setBeginIndex(2);
+        invoker.setEndIndex(4);
+        invoker.playCommand("selection");
+        //copier le texte
+        invoker.playCommand("copy");
+        //coller le texte a cette position
+        invoker.setBeginIndex(6);
+        invoker.setEndIndex(6);
+        //appeler la commande pour coller le texte
+        invoker.playCommand("paste");
+
+        assertEquals("cd", engine.getClipboardContents());
+        assertEquals("abcdcdef", engine.getBufferContents());
+        assertEquals(invoker.getBeginIndex(), 6);
+        assertEquals(invoker.getEndIndex(), 6);
+        
     }
 
 }

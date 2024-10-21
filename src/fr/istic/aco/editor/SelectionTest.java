@@ -5,10 +5,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 public class SelectionTest {
     private Selection selection;
-
+    private Engine engine;
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
-        selection = new SelectionImpl();
+        engine=new EngineImpl();
+        selection = engine.getSelection();
 
     }
 
