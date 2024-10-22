@@ -24,7 +24,7 @@ public class Invoker {
         map.put("insert", insertCommand);
         map.put("cut", new CutCommand(engine, selection));
         map.put("copy", new CopyCommand(engine, selection));
-        map.put("delete", new DeleteCommand(engine));
+        map.put("delete", new DeleteCommand(engine,selection));
         map.put("paste", new PasteCommand(engine,selection));
         map.put("selection", new SelectionCommand(selection, this));
 

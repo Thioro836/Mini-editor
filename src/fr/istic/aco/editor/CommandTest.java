@@ -109,7 +109,20 @@ public class CommandTest {
         assertEquals("abcdcdef", engine.getBufferContents());
         assertEquals(invoker.getBeginIndex(), 6);
         assertEquals(invoker.getEndIndex(), 6);
-        
-    }
 
+    }
+    @Test
+    void deleteCommandTest(){
+        invoker.setTextToInsert("abcde");
+        invoker.playCommand("insert");
+        //selectionner le texte à supprimer
+        invoker.setBeginIndex(2);
+        invoker.setEndIndex(4);
+        invoker.playCommand("selection");
+        //supprimer le texte
+        invoker.playCommand("delete");
+        assertEquals("abe", engine.getBufferContents());
+        assertEquals(2, invoker.getBeginIndex());
+        assertEquals(2, invoker.getEndIndex());
+    }
 }
