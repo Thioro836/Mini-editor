@@ -17,7 +17,7 @@
          * @param s the text to insert
          */
         @Override
-        public void insert(String s) {
+        public void insert(String s) {  
         buffer.append(s);
         int end =selection.getBeginIndex() +s.length();
         selection.setBeginIndex(end);
@@ -82,7 +82,6 @@
         public void copySelectedText() {
             if (selection.getBeginIndex() >= 0 && selection.getEndIndex() <= buffer.length()) {
                 clipboard = buffer.substring(selection.getBeginIndex(), selection.getEndIndex());
-                System.out.println("Clipboard updated to: " + clipboard);
             } else {
                 System.out.println("Indices de sélection incorrects pour la copie");
             }
@@ -108,7 +107,7 @@
          * Removes the contents of the selection in the buffer
          */
         @Override
-        public void delete() {
+        public void delete() {  
             buffer.delete(selection.getBeginIndex(),selection.getEndIndex());
             selection.setEndIndex(selection.getBeginIndex());
         }

@@ -20,7 +20,7 @@ public class Invoker {
         this.beginIndex = 0;
         this.endIndex = 0;
         // Initializing the different commands with Engine and/or Selection
-        insertCommand = new InsertCommand(engine, this); // Crée l'instance ici
+        insertCommand = new InsertCommand(engine, this); 
         map.put("insert", insertCommand);
         map.put("cut", new CutCommand(engine, selection));
         map.put("copy", new CopyCommand(engine, selection));

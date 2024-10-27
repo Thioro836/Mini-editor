@@ -37,9 +37,9 @@ class EngineTest {
          engine.insert("abcdef");
         selection.setBeginIndex(0);
         selection.setEndIndex(2);
-        engine.copySelectedText();
+        engine.cutSelectedText();
         assertEquals("ab", engine.getClipboardContents());
-        assertEquals("abcdef", engine.getBufferContents());
+        assertEquals("cdef", engine.getBufferContents());
     }
 
     @Test
@@ -76,17 +76,19 @@ class EngineTest {
     }
     @Test
     void pasteClipboard() {
-        engine.insert("bcdefg");
+        engine.insert("abcd");
         selection.setBeginIndex(0);
         selection.setEndIndex(2);
         engine.copySelectedText();
         // Collage à la position 5
-        selection.setBeginIndex(5);
-        selection.setEndIndex(5);
+        selection.setBeginIndex(3);
+        selection.setEndIndex(4);
+        engine.delete();
         engine.pasteClipboard();
-         assertEquals("bcdefbcg", engine.getBufferContents(), "Le buffer devrait contenir 'bcdefbcg' après le collage");
-        assertEquals(7, selection.getBeginIndex());
-        assertEquals(7, selection.getEndIndex());
+        assertEquals("ab", engine.getClipboardContents());
+         assertEquals("abcab", engine.getBufferContents(), "Le buffer devrait contenir 'abcab' après le collage");
+        assertEquals(5, selection.getBeginIndex());
+        assertEquals(5, selection.getEndIndex());
     }
     
     @Test
