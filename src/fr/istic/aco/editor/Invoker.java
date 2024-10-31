@@ -10,7 +10,7 @@ public class Invoker {
     private Selection selection;
     private InsertCommand insertCommand; // Specific command for inserting text
     private String textToInsert; // text to insert
-    int beginIndex, endIndex; // Indices for text selection
+   private int beginIndex, endIndex; // Indices for text selection
 
     public Invoker(Engine engine, Selection selection) {
         map = new HashMap<>();
