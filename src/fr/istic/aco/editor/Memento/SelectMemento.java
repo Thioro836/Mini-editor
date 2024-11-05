@@ -1,11 +1,13 @@
-    package fr.istic.aco.editor;
+    package fr.istic.aco.editor.Memento;
 
-    public class SelectMemento implements Memento {
+import fr.istic.aco.editor.Interface.Memento;
+
+public class SelectMemento implements Memento {
     private  int beginIndex, endIndex; 
 
-    public SelectMemento(){
-        this.beginIndex=0;
-        this.endIndex=0;
+    public SelectMemento(int begin, int end){
+        this.beginIndex=begin;
+        this.endIndex=end;
     }
     // getteurs et setteurs pour la selection
 

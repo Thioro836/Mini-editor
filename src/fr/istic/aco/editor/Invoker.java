@@ -1,6 +1,15 @@
 package fr.istic.aco.editor;
 
 import java.util.Map;
+
+import fr.istic.aco.editor.ConcreteCommand.CopyCommand;
+import fr.istic.aco.editor.ConcreteCommand.CutCommand;
+import fr.istic.aco.editor.ConcreteCommand.DeleteCommand;
+import fr.istic.aco.editor.ConcreteCommand.InsertCommand;
+import fr.istic.aco.editor.ConcreteCommand.PasteCommand;
+import fr.istic.aco.editor.ConcreteCommand.SelectionCommand;
+import fr.istic.aco.editor.Interface.Command;
+
 import java.util.HashMap;
 
 public class Invoker {

@@ -1,7 +1,6 @@
-    package fr.istic.aco.editor;
+    package fr.istic.aco.editor.Interface;
 
-    public interface Originator {
+public interface Originator {
         Memento getMemento();
         void setMemento(Memento m);
-
     }
