@@ -1,9 +1,9 @@
-package fr.istic.aco.editor.ConcreteCommand;
+package fr.istic.aco.editor.CommandOriginator;
 
-import fr.istic.aco.editor.Engine;
-import fr.istic.aco.editor.Selection;
 import fr.istic.aco.editor.Interface.CommandOriginator;
+import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Memento;
+import fr.istic.aco.editor.Interface.Selection;
 
 public class PasteCommand implements CommandOriginator{
 private Engine engine;
@@ -19,13 +19,11 @@ public PasteCommand (Engine engine,Selection selection){
    
     @Override
     public void setMemento(Memento memento) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setMemento'");
+       
     }
     @Override
     public Memento getMemento() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMemento'");
+       return null;
     }
     
 }

@@ -2,10 +2,10 @@ package fr.istic.aco.editor.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import fr.istic.aco.editor.Engine;
-import fr.istic.aco.editor.EngineImpl;
-import fr.istic.aco.editor.Selection;
-import fr.istic.aco.editor.SelectionImpl;
+import fr.istic.aco.editor.ClassImpl.EngineImpl;
+import fr.istic.aco.editor.ClassImpl.SelectionImpl;
+import fr.istic.aco.editor.Interface.Engine;
+import fr.istic.aco.editor.Interface.Selection;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class SelectionTest {

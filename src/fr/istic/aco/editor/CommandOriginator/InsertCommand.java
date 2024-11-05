@@ -1,9 +1,10 @@
-package fr.istic.aco.editor.ConcreteCommand;
+package fr.istic.aco.editor.CommandOriginator;
 
-import fr.istic.aco.editor.Engine;
-import fr.istic.aco.editor.Invoker;
+import fr.istic.aco.editor.ClassImpl.Invoker;
 import fr.istic.aco.editor.Interface.CommandOriginator;
+import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Memento;
+import fr.istic.aco.editor.Memento.InsertMemento;
 
 public class InsertCommand implements CommandOriginator{
     private Engine engine;
@@ -21,16 +22,19 @@ public class InsertCommand implements CommandOriginator{
         engine.insert(inv.getTextToInsert());
         }
 
-        @Override
-        public void setMemento(Memento memento) {
-           // this.textToInsert=memento;
-        }
 
         @Override
         public Memento getMemento() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getMemento'");
+           return (new InsertMemento(textToInsert));
+      
         }
+        
+        @Override
+        public void setMemento(Memento memento) {
+            InsertMemento insertMemento = (InsertMemento) memento;
+          this.textToInsert=insertMemento.getText();
+        }
+
         
         
     }

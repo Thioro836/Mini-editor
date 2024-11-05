@@ -1,20 +1,23 @@
-package fr.istic.aco.editor;
+package fr.istic.aco.editor.ClassImpl;
 
 import java.util.Map;
 
-import fr.istic.aco.editor.ConcreteCommand.CopyCommand;
-import fr.istic.aco.editor.ConcreteCommand.CutCommand;
-import fr.istic.aco.editor.ConcreteCommand.DeleteCommand;
-import fr.istic.aco.editor.ConcreteCommand.InsertCommand;
-import fr.istic.aco.editor.ConcreteCommand.PasteCommand;
-import fr.istic.aco.editor.ConcreteCommand.SelectionCommand;
+import fr.istic.aco.editor.CommandOriginator.CopyCommand;
+import fr.istic.aco.editor.CommandOriginator.CutCommand;
+import fr.istic.aco.editor.CommandOriginator.DeleteCommand;
+import fr.istic.aco.editor.CommandOriginator.InsertCommand;
+import fr.istic.aco.editor.CommandOriginator.PasteCommand;
+import fr.istic.aco.editor.CommandOriginator.SelectionCommand;
 import fr.istic.aco.editor.Interface.Command;
+import fr.istic.aco.editor.Interface.CommandOriginator;
+import fr.istic.aco.editor.Interface.Engine;
+import fr.istic.aco.editor.Interface.Selection;
 
 import java.util.HashMap;
 
 public class Invoker {
     // Map to store commands associated with an identifier (String)
-    private Map<String, Command> map;
+    private Map<String, CommandOriginator> map;
     private Engine engine;
     private Selection selection;
     private InsertCommand insertCommand; // Specific command for inserting text
