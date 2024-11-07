@@ -4,17 +4,20 @@ import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Memento;
 import fr.istic.aco.editor.Interface.Selection;
-
+import fr.istic.aco.editor.Interface.Recorder;
 public class CutCommand implements CommandOriginator {
 private Engine engine;
 private Selection selection;
-public CutCommand (Engine engine, Selection selection){
+private Recorder recorder;
+public CutCommand (Engine engine, Selection selection,Recorder recorder){
     this.engine=engine;
     this.selection=selection;
+    this.recorder=recorder;
 }
     @Override
     public void execute() {
         engine.cutSelectedText();
+        recorder.save(this);
     }
 
     @Override

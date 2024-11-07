@@ -11,6 +11,7 @@ import fr.istic.aco.editor.CommandOriginator.SelectionCommand;
 import fr.istic.aco.editor.Interface.Command;
 import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Engine;
+import fr.istic.aco.editor.Interface.Recorder;
 import fr.istic.aco.editor.Interface.Selection;
 
 import java.util.HashMap;
@@ -20,25 +21,27 @@ public class Invoker {
     private Map<String, CommandOriginator> map;
     private Engine engine;
     private Selection selection;
+    private Recorder recorder;
     private InsertCommand insertCommand; // Specific command for inserting text
     private String textToInsert; // text to insert
    private int beginIndex, endIndex; // Indices for text selection
 
-    public Invoker(Engine engine, Selection selection) {
+    public Invoker(Engine engine, Selection selection,Recorder recorder) {
         map = new HashMap<>();
         this.engine = engine;
         this.selection = selection;
+        this.recorder=recorder;
         this.textToInsert = "";
         this.beginIndex = 0;
         this.endIndex = 0;
         // Initializing the different commands with Engine and/or Selection
-        insertCommand = new InsertCommand(engine, this); 
+        insertCommand = new InsertCommand(engine, this,recorder); 
         map.put("insert", insertCommand);
-        map.put("cut", new CutCommand(engine, selection));
-        map.put("copy", new CopyCommand(engine, selection));
-        map.put("delete", new DeleteCommand(engine,selection));
-        map.put("paste", new PasteCommand(engine,selection));
-        map.put("selection", new SelectionCommand(selection, this));
+        map.put("cut", new CutCommand(engine, selection,recorder));
+        map.put("copy", new CopyCommand(engine, selection,recorder));
+        map.put("delete", new DeleteCommand(engine,selection,recorder));
+        map.put("paste", new PasteCommand(engine,selection,recorder));
+        map.put("selection", new SelectionCommand(selection, this,recorder));
 
     }
 

@@ -1,4 +1,4 @@
-    package fr.istic.aco.editor.Interface;
+package fr.istic.aco.editor.Interface;
 
     public interface Recorder {
 
@@ -10,4 +10,5 @@
         void save(CommandOriginator c) ;
         //rejouer la commande 
         void replay();
+       
     }
