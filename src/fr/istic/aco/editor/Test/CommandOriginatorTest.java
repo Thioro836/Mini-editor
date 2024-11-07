@@ -12,7 +12,7 @@ import fr.istic.aco.editor.Interface.Selection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CommandTest {
+public class CommandOriginatorTest {
     private Engine engine;
     private Invoker invoker; // Instance d'Invoker
     private Selection selection;

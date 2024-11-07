@@ -10,5 +10,8 @@ package fr.istic.aco.editor.Interface;
         void save(CommandOriginator c) ;
         //rejouer la commande 
         void replay();
+        int getList();
+      
+        
        
     }

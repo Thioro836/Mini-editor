@@ -38,37 +38,40 @@ public class RecorderTest {
         cOriginator=new SelectionCommand(selection,invoker, recorder); 
         recorder.start();
         recorder.save(cOriginator);
-         
+        assertTrue(recorder.getList()>0) ;
+       
 
     }
     @Test
     void stop(){
+        cOriginator=new SelectionCommand(selection,invoker, recorder); 
+        recorder.start();
+        recorder.save(cOriginator);
+        assertEquals(1, recorder.getList());
         recorder.stop();
-        
+        recorder.save(cOriginator);
+        assertEquals(1, recorder.getList());
         
     }
     @Test
     void save(){
        cOriginator=new InsertCommand(engine,invoker, recorder);
-       CopyCommand c=new CopyCommand(engine, selection, recorder);
        recorder.start();    
        recorder.save(cOriginator);
-       recorder.save(c);
+       recorder.save(cOriginator);
        recorder.stop();
-       recorder.replay();
+      assertEquals(2, recorder.getList());
     }
     @Test 
     void replay(){
         cOriginator=new InsertCommand(engine,invoker, recorder);
-        //invoker.setTextToInsert("hello");
+        invoker.setTextToInsert("hello");
         invoker.playCommand("insert");
-        CopyCommand c=new CopyCommand(engine, selection, recorder);
        
         recorder.start();
-        recorder.save(c);
         recorder.save(cOriginator);
         recorder.stop();    
         recorder.replay();
-    // assertEquals("hello", invoker.getTextToInsert());
+        assertEquals("hello", invoker.getTextToInsert());
     }
 }

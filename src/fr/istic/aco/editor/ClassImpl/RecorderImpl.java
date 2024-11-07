@@ -28,7 +28,8 @@
                 private Memento getMemento() {
                     return memento;
                 }
-        //rajouter les commandes start,stop,replay
+                
+            
 
         }
 
@@ -75,6 +76,11 @@
 
                 
                 }
+
+                public int getList(){
+                    return liste.size();
+                }
+                
 
 
         

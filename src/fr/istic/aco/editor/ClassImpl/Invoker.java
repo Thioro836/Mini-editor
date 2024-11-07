@@ -8,6 +8,9 @@ import fr.istic.aco.editor.CommandOriginator.DeleteCommand;
 import fr.istic.aco.editor.CommandOriginator.InsertCommand;
 import fr.istic.aco.editor.CommandOriginator.PasteCommand;
 import fr.istic.aco.editor.CommandOriginator.SelectionCommand;
+import fr.istic.aco.editor.ConcreteCommandd.ReplayCommand;
+import fr.istic.aco.editor.ConcreteCommandd.StartCommand;
+import fr.istic.aco.editor.ConcreteCommandd.StopCommand;
 import fr.istic.aco.editor.Interface.Command;
 import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Engine;
@@ -17,8 +20,10 @@ import fr.istic.aco.editor.Interface.Selection;
 import java.util.HashMap;
 
 public class Invoker {
-    // Map to store commands associated with an identifier (String)
+    // Map to store commands originator associated with an identifier (String)
     private Map<String, CommandOriginator> map;
+    //Map to store concret commands
+    private Map<String, Command> mapCommand;
     private Engine engine;
     private Selection selection;
     private Recorder recorder;
@@ -28,6 +33,7 @@ public class Invoker {
 
     public Invoker(Engine engine, Selection selection,Recorder recorder) {
         map = new HashMap<>();
+        mapCommand=new HashMap<>();
         this.engine = engine;
         this.selection = selection;
         this.recorder=recorder;
@@ -43,6 +49,11 @@ public class Invoker {
         map.put("paste", new PasteCommand(engine,selection,recorder));
         map.put("selection", new SelectionCommand(selection, this,recorder));
 
+        //Initializing the different concrete commands with recorder
+        mapCommand.put("start", new StartCommand(recorder));
+        mapCommand.put("stop", new StopCommand(recorder));
+        mapCommand.put("replay", new ReplayCommand(recorder));
+        
     }
 
     // Getter to retrieve the text to insert
@@ -83,7 +94,7 @@ public class Invoker {
     }
 
     /**
-     * Executes a command based on the given identifier.
+     * Executes a command originator based on the given identifier.
      * 
      * @param id the identifier of the command to execute
      */
@@ -95,7 +106,20 @@ public class Invoker {
             // If the command does not exist, print an error message
             System.out.println("la clé spécifié n'existe pas ");
         }
-
     }
+        /**
+     * Executes a command concrete based on the given identifier.
+     * 
+     * @param id the identifier of the command to execute
+     */
 
+     public void playCommandConcrete(String id) {
+        // Check if the command exists in the map before executing it
+        if (mapCommand.containsKey(id)) {
+            mapCommand.get(id).execute();
+        } else {
+            // If the command does not exist, print an error message
+            System.out.println("la clé spécifié n'existe pas ");
+        }
+    }
 }
