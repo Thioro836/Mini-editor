@@ -1,4 +1,8 @@
-package fr.istic.aco.editor;
+package fr.istic.aco.editor.ConcreteCommand;
+
+import fr.istic.aco.editor.Interface.Command;
+import fr.istic.aco.editor.Interface.Engine;
+import fr.istic.aco.editor.Interface.Selection;
 
 public class PasteCommand implements Command{
 private Engine engine;

@@ -1,4 +1,8 @@
-package fr.istic.aco.editor;
+package fr.istic.aco.editor.ConcreteCommand;
+
+import fr.istic.aco.editor.ClasseImpl.Invoker;
+import fr.istic.aco.editor.Interface.Command;
+import fr.istic.aco.editor.Interface.Selection;
 
 public class SelectionCommand implements Command {
 private Selection selection;

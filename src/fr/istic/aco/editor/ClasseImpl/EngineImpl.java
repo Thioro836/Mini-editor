@@ -1,6 +1,9 @@
-    package fr.istic.aco.editor;
+    package fr.istic.aco.editor.ClasseImpl;
 
-    public class EngineImpl implements Engine {
+import fr.istic.aco.editor.Interface.Engine;
+import fr.istic.aco.editor.Interface.Selection;
+
+public class EngineImpl implements Engine {
         private StringBuilder buffer;
         private String clipboard;
         private SelectionImpl selection ; 

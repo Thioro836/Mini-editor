@@ -1,4 +1,4 @@
-package fr.istic.aco.editor;
+package fr.istic.aco.editor.Interface;
 
 /**
  * Main API for the text editing engine
