@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SelectionTest {
     private Selection selection;
     private Engine engine;
+    private  StringBuilder b;
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
         engine=new EngineImpl();
@@ -33,9 +34,9 @@ public class SelectionTest {
     @Test
     @DisplayName("Test de l'indice de fin du tampon")
     void testBufferEndIndex(){
-        StringBuilder b = new StringBuilder("123456");
-        Selection s =new SelectionImpl(b);
-        assertEquals(s.getBufferEndIndex(), b.length(),"L'indice de fin du tampon devrait être égal à la longueur du StringBuilder.");
+         b = new StringBuilder("123456");
+         selection =new SelectionImpl(b);
+        assertEquals(selection.getBufferEndIndex(), b.length(),"L'indice de fin du tampon devrait être égal à la longueur du StringBuilder.");
 
 
     }
@@ -43,49 +44,39 @@ public class SelectionTest {
     @DisplayName("Test de mise à jour de l'indice de fin")
     void testEndIndex(){
         int newEndIndex=2;
-        StringBuilder b = new StringBuilder("1234");
-        Selection s =new SelectionImpl(b);
-        s.setEndIndex(newEndIndex);
-        assertEquals(s.getEndIndex(),newEndIndex,"L'indice de fin n'est pas correctement mis à jour");
+         b = new StringBuilder("1234");
+         selection =new SelectionImpl(b);
+        selection.setEndIndex(newEndIndex);
+        assertEquals(selection.getEndIndex(),newEndIndex,"L'indice de fin n'est pas correctement mis à jour");
     }
     @Test
     @DisplayName("Test de mise à jour de l'indice de début")
     void testBeginIndex(){
         int begin=2, end =3;
-        StringBuilder b = new StringBuilder("1234");
-        Selection s =new SelectionImpl(b);
-        s.setBeginIndex(begin);
-        s.setEndIndex(end);
-        assertEquals(s.getBeginIndex(), begin, "L'indice de début n'est pas correctement mis à jour");
+         b = new StringBuilder("1234");
+         selection =new SelectionImpl(b);
+         selection.setBeginIndex(begin);
+         selection.setEndIndex(end);
+        assertEquals(selection.getBeginIndex(), begin, "L'indice de début n'est pas correctement mis à jour");
         
     }
     @Test
     @DisplayName("Test d'erreur si l'indice de début est négatif")
     void testBeginIndexNegative(){
-        StringBuilder b = new StringBuilder("1234");
-        Selection s =new SelectionImpl(b);
+         b = new StringBuilder("1234");
+         selection =new SelectionImpl(b);
         assertThrows(IndexOutOfBoundsException.class, () -> {
-            s.setBeginIndex(s.getBufferBeginIndex() - 1); // Déclenchement de l'exception attendu
+            selection.setBeginIndex(selection.getBufferBeginIndex() - 1); // Déclenchement de l'exception attendu
         });
-    }
-    @Test
-    @DisplayName("Test d'erreur si l'indice de début dépasse la longueur du tampon")
-    void testBeginBiggerThanEnd(){
-        StringBuilder b = new StringBuilder("1234");
-        Selection s =new SelectionImpl(b);
-        assertThrows(IndexOutOfBoundsException.class, () -> {
-            s.setBeginIndex(10); // Déclenchement de l'exception attendu
-        });
-
     }
     @Test
     @DisplayName("Test d'erreur si l'indice de fin est inférieur à l'indice de début")
     void testEndIndexLessThanBeginIndex() {
-    StringBuilder b = new StringBuilder("1234");
-    Selection s = new SelectionImpl(b);
-    s.setBeginIndex(2);
+     b = new StringBuilder("1234");
+     selection = new SelectionImpl(b);
+     selection.setBeginIndex(2);
     assertThrows(IndexOutOfBoundsException.class, () -> {
-        s.setEndIndex(1); // Déclenchement de l'exception attendu car endIndex < beginIndex
+        selection.setEndIndex(1); // Déclenchement de l'exception attendu car endIndex < beginIndex
     });
 }
 

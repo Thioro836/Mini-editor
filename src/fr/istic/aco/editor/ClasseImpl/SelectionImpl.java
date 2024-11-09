@@ -59,7 +59,7 @@ public class SelectionImpl implements Selection {
      */
 
     public int getBufferEndIndex() {
-        return bufferBeginIndex+buffer.length();
+        return bufferBeginIndex + buffer.length();
     }
      /**
      * Changes the value of the begin index of the selection
