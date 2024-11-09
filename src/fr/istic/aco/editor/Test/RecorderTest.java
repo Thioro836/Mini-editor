@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import fr.istic.aco.editor.ClassImpl.EngineImpl;
 import fr.istic.aco.editor.ClassImpl.Invoker;
 import fr.istic.aco.editor.ClassImpl.RecorderImpl;
-import fr.istic.aco.editor.CommandOriginator.CopyCommand;
 import fr.istic.aco.editor.CommandOriginator.InsertCommand;
 import fr.istic.aco.editor.CommandOriginator.SelectionCommand;
 import fr.istic.aco.editor.Interface.CommandOriginator;
