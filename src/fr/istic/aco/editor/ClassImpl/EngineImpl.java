@@ -70,9 +70,10 @@ public class EngineImpl implements Engine {
         public void cutSelectedText() {
             if (selection.getBeginIndex() >= 0 && selection.getEndIndex() <= buffer.length()) {
                 clipboard = buffer.substring(selection.getBeginIndex(), selection.getEndIndex());
+                delete();
             }
         
-        delete();
+        
         
         }
 

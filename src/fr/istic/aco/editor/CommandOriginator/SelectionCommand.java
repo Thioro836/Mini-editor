@@ -13,6 +13,7 @@ private Selection selection;
 private Invoker inv;
 private Recorder recorder;
 private int begin, end;
+private boolean recording;
 public SelectionCommand (Selection selection, Invoker inv, Recorder recorder){
     this.selection=selection;
     this.inv=inv;
@@ -23,9 +24,11 @@ public SelectionCommand (Selection selection, Invoker inv, Recorder recorder){
        
         selection.setBeginIndex(inv.getBeginIndex());
         selection.setEndIndex(inv.getEndIndex());
-        recorder.save(this);
+        if(recording){
+            recorder.save(this);
+        }
+       
     }
-  
    
     @Override
     public Memento getMemento() {

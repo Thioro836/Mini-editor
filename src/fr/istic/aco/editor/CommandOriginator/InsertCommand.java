@@ -12,6 +12,7 @@ public class InsertCommand implements CommandOriginator{
     private Invoker inv;
     private String  textToInsert;
     private Recorder recorder;
+    private boolean recording;
   
     //Rajouter un objet recorder et appeler save dans execute
     public InsertCommand(Engine engine, Invoker inv,Recorder recorder){
@@ -24,13 +25,16 @@ public class InsertCommand implements CommandOriginator{
         @Override
         public void execute() {
         engine.insert(inv.getTextToInsert());
-        recorder.save(this);
+        if(this.recording){
+            recorder.save(this);
+       
         }
+       }
 
 
         @Override
         public Memento getMemento() {
-           return (new InsertMemento(textToInsert));
+           return new InsertMemento(textToInsert);
       
         }
         

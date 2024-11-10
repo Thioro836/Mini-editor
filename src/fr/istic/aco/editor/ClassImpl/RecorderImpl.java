@@ -35,7 +35,7 @@
 
             private List<Pair> liste;
 
-            private boolean recording=false, replaying=false;
+            private boolean recording, replaying;
 
             public RecorderImpl(){
                 liste = new ArrayList<Pair>();

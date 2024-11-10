@@ -117,6 +117,7 @@ public class Invoker {
         // Check if the command exists in the map before executing it
         if (mapCommand.containsKey(id)) {
             mapCommand.get(id).execute();
+            
         } else {
             // If the command does not exist, print an error message
             System.out.println("la clé spécifié n'existe pas ");
