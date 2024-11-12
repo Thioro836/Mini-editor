@@ -4,7 +4,6 @@ import fr.istic.aco.editor.ClassImpl.Invoker;
 import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Memento;
 import fr.istic.aco.editor.Interface.Selection;
-import fr.istic.aco.editor.Memento.InsertMemento;
 import fr.istic.aco.editor.Memento.SelectMemento;
 import fr.istic.aco.editor.Interface.Recorder;
 
