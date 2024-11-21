@@ -1,12 +1,15 @@
     package fr.istic.aco.editor.ClassImpl;
 
 import fr.istic.aco.editor.Interface.Engine;
+import fr.istic.aco.editor.Interface.Memento;
 import fr.istic.aco.editor.Interface.Selection;
+import fr.istic.aco.editor.Memento.EditorMemento;
 
 public class EngineImpl implements Engine {
         private StringBuilder buffer;
         private String clipboard;
         private SelectionImpl selection ; 
+        private int begin, end;
         /*constructeur de la classe */
         public EngineImpl(){
             buffer= new StringBuilder();
@@ -73,8 +76,6 @@ public class EngineImpl implements Engine {
                 delete();
             }
         
-        
-        
         }
 
         /**
@@ -114,5 +115,19 @@ public class EngineImpl implements Engine {
         public void delete() {  
             buffer.delete(selection.getBeginIndex(),selection.getEndIndex());
             selection.setEndIndex(selection.getBeginIndex());
+        }
+
+        @Override
+        public Memento getMemento() {
+            return new EditorMemento(buffer.toString(), begin, end, clipboard);
+        }
+
+        @Override
+        public void setMemento(Memento m) {
+            EditorMemento editorMemento = (EditorMemento) m;
+            this.begin=editorMemento.getBeginIndex();
+            this.end=editorMemento.getEndIndex();
+            buffer=new StringBuilder(editorMemento.getBufferContent());
+            clipboard = editorMemento.getClipboardContent();
         }
     }

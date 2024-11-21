@@ -57,4 +57,8 @@ public interface Engine {
      * Removes the contents of the selection in the buffer
      */
     void delete();
+
+
+    Memento getMemento();
+    void setMemento(Memento m);
 }
