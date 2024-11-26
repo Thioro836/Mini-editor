@@ -8,37 +8,50 @@ import fr.istic.aco.editor.Memento.SelectMemento;
 import fr.istic.aco.editor.Interface.Recorder;
 
 public class SelectionCommand implements CommandOriginator {
-private Selection selection;
-private Invoker inv;
-private Recorder recorder;
-private int begin, end;
-private boolean recording;
-public SelectionCommand (Selection selection, Invoker inv, Recorder recorder){
-    this.selection=selection;
-    this.inv=inv;
-    this.recorder=recorder;
-}
+    private Selection selection;
+    private Invoker inv;
+    private Recorder recorder;
+    private int begin, end;
+    private boolean recording;
+
+    public SelectionCommand(Selection selection, Invoker inv, Recorder recorder) {
+        this.selection = selection;
+        this.inv = inv;
+        this.recorder = recorder;
+        begin = 0;
+        end = 0;
+        recording = false;
+    }
+
     @Override
     public void execute() {
-       
-        selection.setBeginIndex(inv.getBeginIndex());
-        selection.setEndIndex(inv.getEndIndex());
-        if(recording){
-            recorder.save(this);
+        if (!recorder.isReplaying()) {
+            this.begin = inv.getBeginIndex();
+            this.end = inv.getEndIndex();
         }
-       
+
+        selection.setBeginIndex(this.begin);
+        selection.setEndIndex(this.end);
+
+        recorder.save(this);
+        System.out.println("Sélection enregistrée: Begin Index: " + selection.getBeginIndex() + ", End Index: "
+                + selection.getEndIndex());
+
     }
-   
+
     @Override
     public Memento getMemento() {
-       return new SelectMemento(begin,end);
+        begin = inv.getBeginIndex();
+        end = inv.getEndIndex();
+        return new SelectMemento(begin, end);
     }
 
     @Override
     public void setMemento(Memento memento) {
         SelectMemento selectMemento = (SelectMemento) memento;
-        this.begin = selectMemento.getBeginIndex();  
-        this.end = selectMemento.getEndIndex();     
+        this.begin = selectMemento.getBeginIndex();
+        this.end = selectMemento.getEndIndex();
+
     }
-    
+
 }

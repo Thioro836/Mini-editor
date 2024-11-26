@@ -11,30 +11,30 @@ public class UndoManager {
     private List<EditorMemento> pastStates;
     private List<EditorMemento> futurStates;
     private Engine engine;
-    public UndoManager(Engine engine){
-        pastStates=new ArrayList<EditorMemento>();
-        futurStates= new ArrayList<EditorMemento>();
-        this.engine=engine;
-    }
-        // enregistrer l'état de l'engine
-        public void store(){
-            Memento m=engine.getMemento();
-            EditorMemento editorMemento=(EditorMemento)m;
-            pastStates.add(editorMemento);
-            futurStates.clear();
-            
-        }
-        //revenir en arrière
-        public void undo(){
-            for (int i=0; i<pastStates.size();i++){
-              Memento memento= pastStates.get(i);
-             
-              engine.setMemento(memento);
-            }
 
-        }
-        //re
-    public void redo(){
+    public UndoManager(Engine engine) {
+        pastStates = new ArrayList<EditorMemento>();
+        futurStates = new ArrayList<EditorMemento>();
+        this.engine = engine;
+    }
+
+    // enregistrer l'état de l'engine
+    public void store() {
+        Memento m = engine.getMemento();
+        EditorMemento editorMemento = (EditorMemento) m;
+        pastStates.add(editorMemento);
+        futurStates.clear();
+
+    }
+
+    // revenir en arrière
+    public void undo() {
         
+
     }
+
+    // re
+    public void redo() {
+
     }
+}

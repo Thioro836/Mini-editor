@@ -1,4 +1,4 @@
-    package fr.istic.aco.editor.ClassImpl;
+package fr.istic.aco.editor.ClassImpl;
 
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Memento;
@@ -6,128 +6,126 @@ import fr.istic.aco.editor.Interface.Selection;
 import fr.istic.aco.editor.Memento.EditorMemento;
 
 public class EngineImpl implements Engine {
-        private StringBuilder buffer;
-        private String clipboard;
-        private SelectionImpl selection ; 
-        private int begin, end;
-        /*constructeur de la classe */
-        public EngineImpl(){
-            buffer= new StringBuilder();
-            clipboard ="";
-            selection = new SelectionImpl( buffer);
-        }
+    private StringBuilder buffer;
+    private String clipboard;
+    private SelectionImpl selection;
+    private int begin, end;
 
-        /**
-         * Inserts a string in the buffer, which replaces the contents of the selection
-         *
-         * @param s the text to insert
-         */
-        @Override
-        public void insert(String s) {  
-        buffer.append(s);
-        int end =selection.getBeginIndex() +s.length();
+    /* constructeur de la classe */
+    public EngineImpl() {
+        buffer = new StringBuilder();
+        clipboard = "";
+        selection = new SelectionImpl(buffer);
+    }
+
+    /**
+     * Inserts a string in the buffer, which replaces the contents of the selection
+     *
+     * @param s the text to insert
+     */
+    @Override
+    public void insert(String s) {
+      buffer.replace(selection.getBeginIndex(), selection.getEndIndex(), s);
+        int end = selection.getBeginIndex() + s.length();
         selection.setBeginIndex(end);
         selection.setEndIndex(end);
-        
-        }
 
-        /**
-         * Provides access to the selection control object
-         *
-         * @return the selection object
-         */
-        @Override
-        public Selection getSelection() {   
-            
-            return selection;
-        }
+    }
 
-        /**
-         * Provides the whole contents of the buffer, as a string
-         *
-         * @return a copy of the buffer's contents
-         */
-        @Override
-    
+    /**
+     * Provides access to the selection control object
+     *
+     * @return the selection object
+     */
+    @Override
+    public Selection getSelection() {
+
+        return selection;
+    }
+
+    /**
+     * Provides the whole contents of the buffer, as a string
+     *
+     * @return a copy of the buffer's contents
+     */
+    @Override
+
     public String getBufferContents() {
-            return buffer.toString();
+        return buffer.toString();
+    }
+
+    /**
+     * Provides the clipboard contents
+     *
+     * @return a copy of the clipboard's contents
+     */
+    @Override
+    public String getClipboardContents() {
+        return clipboard.toString();
+    }
+
+    /**
+     * Removes the text within the interval
+     * specified by the selection control object,
+     * from the buffer.
+     */
+    @Override
+    public void cutSelectedText() {
+        if (selection.getBeginIndex() >= 0 && selection.getEndIndex() <= buffer.length()) {
+            clipboard = buffer.substring(selection.getBeginIndex(), selection.getEndIndex());
+            delete();
         }
 
-        /**
-         * Provides the clipboard contents
-         *
-         * @return a copy of the clipboard's contents
-         */
-        @Override
-        public String getClipboardContents() {
-            // TODO
-            return clipboard.toString();
-        }
+    }
 
-        /**
-         * Removes the text within the interval
-         * specified by the selection control object,
-         * from the buffer.
-         */
-        @Override
-        public void cutSelectedText() {
-            if (selection.getBeginIndex() >= 0 && selection.getEndIndex() <= buffer.length()) {
-                clipboard = buffer.substring(selection.getBeginIndex(), selection.getEndIndex());
-                delete();
-            }
-        
-        }
-
-        /**
-         * Copies the text within the interval
-         * specified by the selection control object
-         * into the clipboard.
-         */
-        @Override
-        public void copySelectedText() {
-            if (selection.getBeginIndex() >= 0 && selection.getEndIndex() <= buffer.length()) {
-                clipboard = buffer.substring(selection.getBeginIndex(), selection.getEndIndex());
-            } else {
-                System.out.println("Indices de sélection incorrects pour la copie");
-            }
-        }
-        
-
-        /**
-         * Replaces the text within the interval specified by the selection object with
-         * the contents of the clipboard.
-         */
-        @Override
-        public void pasteClipboard() {
-            int insertPos = selection.getBeginIndex();
-            buffer.insert(insertPos, clipboard);
-            int newEndIndex = insertPos + clipboard.length();
-            selection.setBeginIndex(newEndIndex);
-            selection.setEndIndex(newEndIndex);
-        
-        }
-
-        
-        /**
-         * Removes the contents of the selection in the buffer
-         */
-        @Override
-        public void delete() {  
-            buffer.delete(selection.getBeginIndex(),selection.getEndIndex());
-            selection.setEndIndex(selection.getBeginIndex());
-        }
-
-        @Override
-        public Memento getMemento() {
-            return new EditorMemento(buffer.toString(), begin, end, clipboard);
-        }
-
-        @Override
-        public void setMemento(Memento m) {
-            EditorMemento editorMemento = (EditorMemento) m;
-            this.begin=editorMemento.getBeginIndex();
-            this.end=editorMemento.getEndIndex();
-            buffer=new StringBuilder(editorMemento.getBufferContent());
-            clipboard = editorMemento.getClipboardContent();
+    /**
+     * Copies the text within the interval
+     * specified by the selection control object
+     * into the clipboard.
+     */
+    @Override
+    public void copySelectedText() {
+        if (selection.getBeginIndex() >= 0 && selection.getEndIndex() <= buffer.length()) {
+            clipboard = buffer.substring(selection.getBeginIndex(), selection.getEndIndex());
+        } else {
+            System.out.println("Indices de sélection incorrects pour la copie");
         }
     }
+
+    /**
+     * Replaces the text within the interval specified by the selection object with
+     * the contents of the clipboard.
+     */
+    @Override
+    public void pasteClipboard() {
+        int insertPos = selection.getBeginIndex();
+        buffer.insert(insertPos, clipboard);
+        int newEndIndex = insertPos + clipboard.length();
+        selection.setBeginIndex(newEndIndex);
+        selection.setEndIndex(newEndIndex);
+
+    }
+
+    /**
+     * Removes the contents of the selection in the buffer
+     */
+    @Override
+    public void delete() {
+        buffer.delete(selection.getBeginIndex(), selection.getEndIndex());
+        selection.setEndIndex(selection.getBeginIndex());
+    }
+
+    @Override
+    public Memento getMemento() {
+        return new EditorMemento(buffer.toString(), begin, end, clipboard);
+    }
+
+    @Override
+    public void setMemento(Memento m) {
+        EditorMemento editorMemento = (EditorMemento) m;
+        this.begin = editorMemento.getBeginIndex();
+        this.end = editorMemento.getEndIndex();
+        buffer = new StringBuilder(editorMemento.getBufferContent());
+        clipboard = editorMemento.getClipboardContent();
+    }
+}

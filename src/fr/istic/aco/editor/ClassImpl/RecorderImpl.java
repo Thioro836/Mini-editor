@@ -1,90 +1,74 @@
-        package fr.istic.aco.editor.ClassImpl;
+package fr.istic.aco.editor.ClassImpl;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
-        import fr.istic.aco.editor.CommandOriginator.InsertCommand;
-        import fr.istic.aco.editor.Interface.Command;
-        import fr.istic.aco.editor.Interface.CommandOriginator;
-        import fr.istic.aco.editor.Interface.Memento;
-        import fr.istic.aco.editor.Interface.Recorder;
+import fr.istic.aco.editor.CommandOriginator.InsertCommand;
+import fr.istic.aco.editor.Interface.Command;
+import fr.istic.aco.editor.Interface.CommandOriginator;
+import fr.istic.aco.editor.Interface.Memento;
+import fr.istic.aco.editor.Interface.Recorder;
 
+public class RecorderImpl implements Recorder {
 
-        public class RecorderImpl implements Recorder {
+    private List<Pair<CommandOriginator, Memento>> liste;
+    private List<Pair<CommandOriginator, Memento>> historique;
 
-            private class Pair {
+    private boolean recording = false;
+    private boolean replaying = false;
 
-                private CommandOriginator command;
-                private Memento memento;
+    public RecorderImpl() {
+        liste = new ArrayList<>();
+        historique = new ArrayList<>();
+    }
 
-             Pair(CommandOriginator c, Memento m) {
-                    this.command = c;
-                    this.memento = m;
-                }
-            private CommandOriginator getCommandOriginator() {
-                    return command;
-                }
+    @Override
+    public void start() {
+        liste.clear();
+        this.recording = true;
+    }
 
-                private Memento getMemento() {
-                    return memento;
-                }
-                
-            
+    @Override
+    public void stop() {
+        this.recording = false;
+    }
 
+    @Override
+    public void save(CommandOriginator c) {
+        if (recording && !replaying) {
+            Memento memento = c.getMemento();
+            Pair<CommandOriginator, Memento> pair = new Pair<>(c, memento);
+            liste.add(pair);
+           // System.out.println("Commande enregistrée: " + c.getClass().getSimpleName() + " avec état: " + memento);
+        }
+    }
+
+    public List<Pair<CommandOriginator, Memento>> getHistorique() {
+        return historique;
+    }
+
+    @Override
+    public void replay() {
+        replaying = true;
+        historique.addAll(liste); // Sauvegarder l'historique
+        for (Pair<CommandOriginator, Memento> pair : liste) {
+
+            CommandOriginator command = pair.getCommandOriginator();
+            Memento memento = pair.getMemento();
+
+            command.setMemento(memento); // restaurer létat
+            command.execute();
         }
 
-            private List<Pair> liste;
+        replaying = false;
+    }
 
-            private boolean recording, replaying;
+    public int getList() {
+        return liste.size();
+    }
 
-            public RecorderImpl(){
-                liste = new ArrayList<Pair>();
-            }
+    public boolean isReplaying() {
+        return replaying;
+    }
 
-            @Override
-            public void start() {
-                recording=true;
-            }
-
-            @Override
-            public void stop() {
-            recording=false;
-            }
-
-            @Override
-            public void save(CommandOriginator c) {
-                    
-              if(recording){
-                liste.add(new Pair(c, c.getMemento()));
-              }
-            
-            
-            }
-
-                @Override
-                public void replay() {
-
-                for(int i=0; i<liste.size();i++){
-
-                Pair pair= liste.get(i);
-                CommandOriginator command= pair.getCommandOriginator();
-                Memento memento =pair.getMemento();
-                    command.setMemento(memento);  //restaurer létat
-                    command.execute();
-
-                }
-
-                
-                }
-
-                public int getList(){
-                    return liste.size();
-                }
-                
-
-
-        
-
-        
-
-        }
+}
