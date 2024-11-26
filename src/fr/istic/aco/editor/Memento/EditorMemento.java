@@ -17,7 +17,7 @@ public class EditorMemento implements Memento {
             return bufferContent.toString();
          
          }
-         //demander à adrien si nécessaire
+      
          public void setBufferContent(String buffer){
             this.bufferContent=buffer;
          }
@@ -41,7 +41,7 @@ public class EditorMemento implements Memento {
             return clipboard.toString();
          
          }
-          //demander à adrien si nécessaire
+        
          public void setClipboardContent(String clipboard){
             this.clipboard=clipboard;
          }

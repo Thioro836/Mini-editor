@@ -28,10 +28,15 @@ public class UndoManager {
     }
 
     // revenir en arrière
-    public void undo() {
-        
-
-    }
+    public void undo() 
+    { 
+        if (!pastStates.isEmpty()) {
+         EditorMemento currentState = (EditorMemento) engine.getMemento(); 
+         futurStates.add(currentState); 
+         EditorMemento  previousState = pastStates.remove(pastStates.size() - 1); 
+         engine.setMemento(previousState);//restaure l'éditeur à l'état précedent
+         }
+     }
 
     // re
     public void redo() {
