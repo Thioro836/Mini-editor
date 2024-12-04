@@ -12,6 +12,7 @@ import fr.istic.aco.editor.ConcreteCommand.ReplayCommand;
 import fr.istic.aco.editor.ConcreteCommand.StartCommand;
 import fr.istic.aco.editor.ConcreteCommand.StopCommand;
 import fr.istic.aco.editor.ConcreteCommand.UndoCommand;
+import fr.istic.aco.editor.ConcreteCommand.RedoCommand;
 import fr.istic.aco.editor.Interface.Command;
 import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Engine;
@@ -33,13 +34,13 @@ public class Invoker {
     private String textToInsert; // text to insert
     private int beginIndex, endIndex; // Indices for text selection
 
-    public Invoker(Engine engine, Selection selection, Recorder recorder) {
+    public Invoker(Engine engine, Selection selection, Recorder recorder,UndoManager undoManager) {
         map = new HashMap<>();
         mapCommand = new HashMap<>();
         this.engine = engine;
         this.selection = selection;
         this.recorder = recorder;
-        // this.undoManager = undoManager;
+        this.undoManager = undoManager;
         this.textToInsert = "";
         this.beginIndex = 0;
         this.endIndex = 0;
@@ -57,6 +58,7 @@ public class Invoker {
         mapCommand.put("stop", new StopCommand(recorder));
         mapCommand.put("replay", new ReplayCommand(recorder));
         mapCommand.put("undo", new UndoCommand(undoManager));
+        mapCommand.put("redo", new RedoCommand(undoManager));
 
     }
 

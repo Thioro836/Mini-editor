@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import fr.istic.aco.editor.ClassImpl.EngineImpl;
 import fr.istic.aco.editor.ClassImpl.Invoker;
 import fr.istic.aco.editor.ClassImpl.RecorderImpl;
+import fr.istic.aco.editor.ClassImpl.UndoManager;
 import fr.istic.aco.editor.CommandOriginator.InsertCommand;
 import fr.istic.aco.editor.CommandOriginator.SelectionCommand;
 import fr.istic.aco.editor.Interface.CommandOriginator;
@@ -20,13 +21,14 @@ public class RecorderTest {
     private Engine engine;
     private Invoker invoker;
     private Selection selection;
+    private UndoManager undoManager;
     private CommandOriginator cOriginator;
      @org.junit.jupiter.api.BeforeEach
     void setUp() {
         recorder = new RecorderImpl();
        engine=new EngineImpl();
        selection=engine.getSelection();
-       invoker = new Invoker(engine, selection,recorder);
+       invoker = new Invoker(engine, selection,recorder,undoManager);
     }
 
     private void todo() {

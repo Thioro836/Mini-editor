@@ -2,6 +2,7 @@ package fr.istic.aco.editor.UI;
 
 import java.util.Scanner;
 import fr.istic.aco.editor.ClassImpl.Invoker;
+import fr.istic.aco.editor.ClassImpl.UndoManager;
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Selection;
 
@@ -9,6 +10,7 @@ public class TextualInterface {
     private Invoker invoker;
     private Scanner scanner;
     private Engine engine;
+    private UndoManager undoManager;
 
     public TextualInterface(Invoker invoker, Engine engine) {
         this.invoker = invoker;
@@ -29,6 +31,8 @@ public class TextualInterface {
             System.out.println("6. start - Start Recording");
             System.out.println("7. stop - Stop Recording");
             System.out.println("8. replay - Replay recorded commands");
+            System.out.println("9. undo - Start Undo");
+            System.out.println("10. redo - Start Redo");
             System.out.println("9. exit - Exit");
 
             String command = scanner.nextLine().toLowerCase();
@@ -67,6 +71,16 @@ public class TextualInterface {
                 case "selection":
                     handleSelection();
                     break;
+                case "undo":
+                    System.out.println("Undo commands...");
+                    invoker.playCommand("undo");
+                    showText();
+                      break;
+                case "redo":
+                      System.out.println("Redo commands...");
+                      invoker.playCommand("redo");
+                      showText();
+                        break;
                 case "exit":
                     System.out.println("Thanks for using the editor. Goodbye!");
                     return;
