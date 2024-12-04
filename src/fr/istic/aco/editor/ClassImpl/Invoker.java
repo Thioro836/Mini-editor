@@ -8,9 +8,10 @@ import fr.istic.aco.editor.CommandOriginator.DeleteCommand;
 import fr.istic.aco.editor.CommandOriginator.InsertCommand;
 import fr.istic.aco.editor.CommandOriginator.PasteCommand;
 import fr.istic.aco.editor.CommandOriginator.SelectionCommand;
-import fr.istic.aco.editor.ConcreteCommandd.ReplayCommand;
-import fr.istic.aco.editor.ConcreteCommandd.StartCommand;
-import fr.istic.aco.editor.ConcreteCommandd.StopCommand;
+import fr.istic.aco.editor.ConcreteCommand.ReplayCommand;
+import fr.istic.aco.editor.ConcreteCommand.StartCommand;
+import fr.istic.aco.editor.ConcreteCommand.StopCommand;
+import fr.istic.aco.editor.ConcreteCommand.UndoCommand;
 import fr.istic.aco.editor.Interface.Command;
 import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Engine;
@@ -22,38 +23,41 @@ import java.util.HashMap;
 public class Invoker {
     // Map to store commands originator associated with an identifier (String)
     private Map<String, CommandOriginator> map;
-    //Map to store concret commands
+    // Map to store concret commands
     private Map<String, Command> mapCommand;
     private Engine engine;
     private Selection selection;
+    private UndoManager undoManager;
     private Recorder recorder;
     private InsertCommand insertCommand; // Specific command for inserting text
     private String textToInsert; // text to insert
-   private int beginIndex, endIndex; // Indices for text selection
+    private int beginIndex, endIndex; // Indices for text selection
 
-    public Invoker(Engine engine, Selection selection,Recorder recorder) {
+    public Invoker(Engine engine, Selection selection, Recorder recorder) {
         map = new HashMap<>();
-        mapCommand=new HashMap<>();
+        mapCommand = new HashMap<>();
         this.engine = engine;
         this.selection = selection;
-        this.recorder=recorder;
+        this.recorder = recorder;
+        // this.undoManager = undoManager;
         this.textToInsert = "";
         this.beginIndex = 0;
         this.endIndex = 0;
         // Initializing the different commands with Engine and/or Selection
-        insertCommand = new InsertCommand(engine, this,recorder); 
+        insertCommand = new InsertCommand(engine, this, recorder);
         map.put("insert", insertCommand);
-        map.put("cut", new CutCommand(engine, selection,recorder));
-        map.put("copy", new CopyCommand(engine, selection,recorder));
-        map.put("delete", new DeleteCommand(engine,selection,recorder));
-        map.put("paste", new PasteCommand(engine,selection,recorder));
-        map.put("selection", new SelectionCommand(selection, this,recorder));
+        map.put("cut", new CutCommand(engine, selection, recorder));
+        map.put("copy", new CopyCommand(engine, selection, recorder));
+        map.put("delete", new DeleteCommand(engine, selection, recorder));
+        map.put("paste", new PasteCommand(engine, selection, recorder));
+        map.put("selection", new SelectionCommand(selection, this, recorder));
 
-        //Initializing the different concrete commands with recorder
+        // Initializing the different concrete commands with recorder
         mapCommand.put("start", new StartCommand(recorder));
         mapCommand.put("stop", new StopCommand(recorder));
         mapCommand.put("replay", new ReplayCommand(recorder));
-        
+        mapCommand.put("undo", new UndoCommand(undoManager));
+
     }
 
     // Getter to retrieve the text to insert
@@ -107,17 +111,18 @@ public class Invoker {
             System.out.println("la clé spécifié n'existe pas ");
         }
     }
-        /**
+
+    /**
      * Executes a command concrete based on the given identifier.
      * 
      * @param id the identifier of the command to execute
      */
 
-     public void playCommandConcrete(String id) {
+    public void playCommandConcrete(String id) {
         // Check if the command exists in the map before executing it
         if (mapCommand.containsKey(id)) {
             mapCommand.get(id).execute();
-            
+
         } else {
             // If the command does not exist, print an error message
             System.out.println("la clé spécifié n'existe pas ");

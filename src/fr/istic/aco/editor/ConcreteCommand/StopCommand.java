@@ -1,4 +1,4 @@
-package fr.istic.aco.editor.ConcreteCommandd;
+package fr.istic.aco.editor.ConcreteCommand;
 
 import fr.istic.aco.editor.Interface.Command;
 import fr.istic.aco.editor.Interface.Recorder;

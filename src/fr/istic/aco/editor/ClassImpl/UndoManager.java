@@ -40,6 +40,13 @@ public class UndoManager {
 
     // re
     public void redo() {
+        if(!futurStates.isEmpty()){
+            EditorMemento currentState = (EditorMemento) engine.getMemento(); 
+            pastStates.add(currentState);
+            EditorMemento  nextState = futurStates.remove(futurStates.size() - 1); 
+             engine.setMemento(nextState);
+        }
+       
 
     }
 }
