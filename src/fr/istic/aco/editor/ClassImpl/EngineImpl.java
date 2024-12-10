@@ -7,7 +7,7 @@ import fr.istic.aco.editor.Memento.EditorMemento;
 
 public class EngineImpl implements Engine {
     private StringBuilder buffer;
-    private String clipboard;
+    private String clipboard; 
     private SelectionImpl selection;
     private int begin, end;
 
