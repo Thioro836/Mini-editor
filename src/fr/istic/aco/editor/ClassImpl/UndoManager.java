@@ -22,31 +22,32 @@ public class UndoManager {
     public void store() {
         Memento m = engine.getMemento();
         EditorMemento editorMemento = (EditorMemento) m;
+        System.out.println("Storing state: " + editorMemento.getBufferContent());
+
         pastStates.add(editorMemento);
         futurStates.clear();
 
     }
 
     // revenir en arrière
-    public void undo() 
-    { 
+    public void undo() {
         if (!pastStates.isEmpty()) {
-         EditorMemento currentState = (EditorMemento) engine.getMemento(); 
-         futurStates.add(currentState); 
-         EditorMemento  previousState = pastStates.remove(pastStates.size() - 1); 
-         engine.setMemento(previousState);//restaure l'éditeur à l'état précedent
-         }
-     }
-
-    // re
-    public void redo() {
-        if(!futurStates.isEmpty()){
-            EditorMemento currentState = (EditorMemento) engine.getMemento(); 
-            pastStates.add(currentState);
-            EditorMemento  nextState = futurStates.remove(futurStates.size() - 1); 
-             engine.setMemento(nextState);
+            EditorMemento currentState = (EditorMemento) engine.getMemento();
+            futurStates.add(0, currentState);
+            EditorMemento previousState = pastStates.remove(pastStates.size() - 1);
+            engine.setMemento(previousState);
+            // Restaurer l'état précédent
+            System.out.println("Undo to state: " + previousState.getBufferContent());
         }
-       
+    }
+
+    public void redo() {
+        if (!futurStates.isEmpty()) {
+            EditorMemento currentState = (EditorMemento) engine.getMemento();
+            pastStates.add(currentState);
+            EditorMemento nextState = futurStates.remove(futurStates.size() - 1);
+            engine.setMemento(nextState);
+        }
 
     }
 }

@@ -14,7 +14,7 @@ public class EditorMemento implements Memento {
             this.endIndex=end;
          }
          public String getBufferContent(){
-            return bufferContent.toString();
+            return bufferContent;
          
          }
       
@@ -38,7 +38,7 @@ public class EditorMemento implements Memento {
         }
 
         public String getClipboardContent(){
-            return clipboard.toString();
+            return clipboard;
          
          }
         

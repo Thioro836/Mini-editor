@@ -22,5 +22,7 @@ public class Pair<CommandOriginator,Memento> {
             return memento;
         }
 
+       
+
     }
 

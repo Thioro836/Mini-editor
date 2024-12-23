@@ -1,21 +1,29 @@
 package fr.istic.aco.editor.ClassImpl;
 
+import fr.istic.aco.editor.CommandOriginator.DeleteCommand;
+import fr.istic.aco.editor.CommandOriginator.InsertCommand;
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Memento;
+import fr.istic.aco.editor.Interface.Recorder;
 import fr.istic.aco.editor.Interface.Selection;
 import fr.istic.aco.editor.Memento.EditorMemento;
 
 public class EngineImpl implements Engine {
     private StringBuilder buffer;
-    private String clipboard; 
+    private String clipboard;
     private SelectionImpl selection;
     private int begin, end;
+    private UndoManager undoManager;
+    
 
     /* constructeur de la classe */
     public EngineImpl() {
         buffer = new StringBuilder();
         clipboard = "";
         selection = new SelectionImpl(buffer);
+        undoManager = new UndoManager(this);
+        
+      
     }
 
     /**
@@ -25,7 +33,8 @@ public class EngineImpl implements Engine {
      */
     @Override
     public void insert(String s) {
-      buffer.replace(selection.getBeginIndex(), selection.getEndIndex(), s);
+        undoManager.store();
+        buffer.replace(selection.getBeginIndex(), selection.getEndIndex(), s);
         int end = selection.getBeginIndex() + s.length();
         selection.setBeginIndex(end);
         selection.setEndIndex(end);
@@ -98,6 +107,7 @@ public class EngineImpl implements Engine {
      */
     @Override
     public void pasteClipboard() {
+        undoManager.store();
         int insertPos = selection.getBeginIndex();
         buffer.insert(insertPos, clipboard);
         int newEndIndex = insertPos + clipboard.length();
@@ -111,21 +121,26 @@ public class EngineImpl implements Engine {
      */
     @Override
     public void delete() {
+       undoManager.store();
         buffer.delete(selection.getBeginIndex(), selection.getEndIndex());
         selection.setEndIndex(selection.getBeginIndex());
     }
 
     @Override
     public Memento getMemento() {
-        return new EditorMemento(buffer.toString(), begin, end, clipboard);
+        return new EditorMemento(buffer.toString(), selection.getBeginIndex(), selection.getEndIndex(), clipboard);
     }
 
     @Override
     public void setMemento(Memento m) {
         EditorMemento editorMemento = (EditorMemento) m;
-        this.begin = editorMemento.getBeginIndex();
-        this.end = editorMemento.getEndIndex();
-        buffer = new StringBuilder(editorMemento.getBufferContent());
-        clipboard = editorMemento.getClipboardContent();
+        System.out.println("Restoring state: " + editorMemento.getBufferContent());
+        // this.buffer = new StringBuilder(editorMemento.getBufferContent());
+        buffer.setLength(0); // Vide le buffer actuel
+        buffer.append(editorMemento.getBufferContent());
+        this.selection.setBeginIndex(editorMemento.getBeginIndex());
+        this.selection.setEndIndex(editorMemento.getEndIndex());
+        this.clipboard = editorMemento.getClipboardContent();
     }
+
 }

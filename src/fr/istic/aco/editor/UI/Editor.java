@@ -17,7 +17,7 @@ public class Editor {
         UndoManager undoManager = new UndoManager(engine);
         Invoker invoker = new Invoker(engine, selection, recorder,undoManager);
         
-        TextualInterface ui = new TextualInterface(invoker,engine);
+        TextualInterface ui = new TextualInterface(invoker,engine,undoManager);
         ui.start();
     }
 }

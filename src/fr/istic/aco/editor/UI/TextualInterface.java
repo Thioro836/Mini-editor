@@ -12,9 +12,10 @@ public class TextualInterface {
     private Engine engine;
     private UndoManager undoManager;
 
-    public TextualInterface(Invoker invoker, Engine engine) {
+    public TextualInterface(Invoker invoker, Engine engine,UndoManager undoManager) {
         this.invoker = invoker;
         this.engine = engine;
+        this.undoManager=undoManager;
         this.scanner = new Scanner(System.in);
     }
 
@@ -73,14 +74,14 @@ public class TextualInterface {
                     break;
                 case "undo":
                     System.out.println("Undo commands...");
-                    invoker.playCommand("undo");
+                    invoker.playCommandConcrete("undo");
                     showText();
-                      break;
+                    break;
                 case "redo":
-                      System.out.println("Redo commands...");
-                      invoker.playCommand("redo");
-                      showText();
-                        break;
+                    System.out.println("Redo commands...");
+                    invoker.playCommandConcrete("redo");
+                    showText();
+                    break;
                 case "exit":
                     System.out.println("Thanks for using the editor. Goodbye!");
                     return;
@@ -94,6 +95,7 @@ public class TextualInterface {
         System.out.print("Enter the text to insert: ");
         String text = scanner.nextLine();
         invoker.setTextToInsert(text);
+        undoManager.store();
         invoker.playCommand("insert");
         showText();
     }
@@ -103,11 +105,11 @@ public class TextualInterface {
         int begin = scanner.nextInt();
         System.out.print("End of selection index: ");
         int end = scanner.nextInt();
-        scanner.nextLine(); 
+        scanner.nextLine();
         invoker.setBeginIndex(begin);
         invoker.setEndIndex(end);
         invoker.playCommand("selection");
-       
+
     }
 
     private void showText() {
@@ -119,5 +121,5 @@ public class TextualInterface {
         String clipboardContent = engine.getClipboardContents();
         System.out.println("Clipboard content: " + clipboardContent);
     }
-    
+
 }
