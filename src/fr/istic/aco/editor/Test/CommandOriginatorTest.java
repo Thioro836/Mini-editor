@@ -12,23 +12,31 @@ import fr.istic.aco.editor.Interface.Selection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains tests for the CommandOriginator pattern in the text editor system.
+ * It tests various commands such as insert, selection, copy, cut, paste, and delete
+ * to ensure the proper behavior and interactions between the components.
+ */
 public class CommandOriginatorTest {
     private Engine engine;
-    private Invoker invoker; // Instance d'Invoker
+    private Invoker invoker;
     private Selection selection;
     private Recorder recorder;
+/**
+     * Sets up the necessary components before each test.
+     * Initializes the Engine, Selection, Recorder, and Invoker.
+     */
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
         engine = new EngineImpl();
         selection = engine.getSelection();
-        recorder=new RecorderImpl();
-        invoker = new Invoker(engine, selection,recorder);
+        recorder = new RecorderImpl();
+        invoker = new Invoker(engine, selection, recorder);
     }
-
-    private void todo() {
-        fail("Unimplemented test");
-    }
-
+    /**
+     * Tests the InsertCommand behavior in the editor.
+     * Verifies that text is inserted into the buffer correctly.
+     */
     @Test
     void insertCommandTest() {
         // in the beginning buffer is empty
@@ -47,7 +55,10 @@ public class CommandOriginatorTest {
         assertEquals("fgh", invoker.getTextToInsert());
         assertEquals("abcdefgh", engine.getBufferContents());
     }
-
+    /**
+     * Tests the SelectionCommand behavior in the editor.
+     * Verifies that the selection indices are correctly set.
+     */
     @Test
     void SelectionCommandTest() {
         // Define the text to insert before executing the selection command
@@ -63,11 +74,14 @@ public class CommandOriginatorTest {
         assertEquals(2, selection.getBeginIndex());
         assertEquals(4, selection.getEndIndex());
     }
-
+    /**
+     * Tests the CopyCommand behavior in the editor.
+     * Verifies that the selected text is copied to the clipboard.
+     */
     @Test
     void CopyCommandTest() {
         invoker.setTextToInsert("abcd");
-          invoker.playCommand("insert");
+        invoker.playCommand("insert");
         // Avant d'exécuter la commande de copie
         invoker.setBeginIndex(0);
         invoker.setEndIndex(2); // Sélectionne tout le texte disponible
@@ -79,13 +93,15 @@ public class CommandOriginatorTest {
         assertEquals("abcd", engine.getBufferContents());
 
     }
-
+    /**
+     * Tests the CutCommand behavior in the editor.
+     * Verifies that the selected text is cut and placed on the clipboard.
+     */
     @Test
     void cutCommandTest() {
         invoker.setTextToInsert("abcdefg");
         invoker.playCommand("insert");
 
-        // Avant d'exécuter la commande de copie
         invoker.setBeginIndex(2);
         invoker.setEndIndex(5);
         invoker.playCommand("selection");
@@ -96,42 +112,50 @@ public class CommandOriginatorTest {
         assertEquals("abfg", engine.getBufferContents());
 
     }
-    @Test 
-    void pasteCommandTest(){
-        //insérer dans le buffer
+    /**
+     * Tests the PasteCommand behavior in the editor.
+     * Verifies that the text from the clipboard is correctly pasted at the selected position.
+     */
+    @Test
+    void pasteCommandTest() {
+       
         invoker.setTextToInsert("abcdef");
         invoker.playCommand("insert");
-        //faire la sélection
+      
         invoker.setBeginIndex(2);
         invoker.setEndIndex(4);
         invoker.playCommand("selection");
-        //copier le texte
+       
         invoker.playCommand("copy");
-        //coller le texte a cette position
+       
         invoker.setBeginIndex(0);
         invoker.setEndIndex(2);
         invoker.playCommand("selection");
-        //appeler la commande pour coller le texte
+       
         invoker.playCommand("delete");
         invoker.playCommand("paste");
         assertEquals("cd", engine.getClipboardContents());
         assertEquals("cdcdef", engine.getBufferContents());
-        //assertEquals(invoker.getBeginIndex(), 2);
+        // assertEquals(invoker.getBeginIndex(), 2);
         assertEquals(invoker.getEndIndex(), 2);
 
     }
+/**
+     * Tests the DeleteCommand behavior in the editor.
+     * Verifies that the selected text is deleted from the buffer.
+     */
     @Test
-    void deleteCommandTest(){
+    void deleteCommandTest() {
         invoker.setTextToInsert("abcde");
         invoker.playCommand("insert");
-        //selectionner le texte à supprimer
+      
         invoker.setBeginIndex(2);
         invoker.setEndIndex(4);
         invoker.playCommand("selection");
-        //supprimer le texte
+       
         invoker.playCommand("delete");
         assertEquals("abe", engine.getBufferContents());
         assertEquals(2, invoker.getBeginIndex());
-        //assertEquals(2,invoker.getEndIndex());
+       
     }
 }

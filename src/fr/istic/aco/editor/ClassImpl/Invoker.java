@@ -19,74 +19,112 @@ import fr.istic.aco.editor.Interface.Selection;
 
 import java.util.HashMap;
 
+/**
+ * The {@code Invoker} class acts as an intermediary between the user and the
+ * command objects.
+ * It initializes and stores different commands in a map and provides methods to
+ * execute them.
+ * This class also manages the text insertion and selection indices.
+ */
 public class Invoker {
-    // Map to store commands originator associated with an identifier (String)
+
     private Map<String, CommandOriginator> map;
-    //Map to store concret commands
     private Map<String, Command> mapCommand;
     private Engine engine;
     private Selection selection;
     private Recorder recorder;
     private InsertCommand insertCommand; // Specific command for inserting text
     private String textToInsert; // text to insert
-   private int beginIndex, endIndex; // Indices for text selection
+    private int beginIndex, endIndex; // Indices for text selection
 
-    public Invoker(Engine engine, Selection selection,Recorder recorder) {
+    /**
+     * Constructs an {@code Invoker} with the specified engine, selection, and
+     * recorder.
+     * Initializes commands and maps them to identifiers.
+     * 
+     * @param engine    the {@link Engine} instance
+     * @param selection the {@link Selection} instance
+     * @param recorder  the {@link Recorder} instance
+     */
+    public Invoker(Engine engine, Selection selection, Recorder recorder) {
         map = new HashMap<>();
-        mapCommand=new HashMap<>();
+        mapCommand = new HashMap<>();
         this.engine = engine;
         this.selection = selection;
-        this.recorder=recorder;
+        this.recorder = recorder;
         this.textToInsert = "";
         this.beginIndex = 0;
         this.endIndex = 0;
         // Initializing the different commands with Engine and/or Selection
-        insertCommand = new InsertCommand(engine, this,recorder); 
+        insertCommand = new InsertCommand(engine, this, recorder);
         map.put("insert", insertCommand);
-        map.put("cut", new CutCommand(engine, selection,recorder));
-        map.put("copy", new CopyCommand(engine, selection,recorder));
-        map.put("delete", new DeleteCommand(engine,selection,recorder));
-        map.put("paste", new PasteCommand(engine,selection,recorder));
-        map.put("selection", new SelectionCommand(selection, this,recorder));
+        map.put("cut", new CutCommand(engine, selection, recorder));
+        map.put("copy", new CopyCommand(engine, selection, recorder));
+        map.put("delete", new DeleteCommand(engine, selection, recorder));
+        map.put("paste", new PasteCommand(engine, selection, recorder));
+        map.put("selection", new SelectionCommand(selection, this, recorder));
 
-        //Initializing the different concrete commands with recorder
+        // Initializing the different concrete commands with recorder
         mapCommand.put("start", new StartCommand(recorder));
         mapCommand.put("stop", new StopCommand(recorder));
         mapCommand.put("replay", new ReplayCommand(recorder));
-        
+
     }
 
-    // Getter to retrieve the text to insert
+    /**
+     * Retrieves the text to be inserted.
+     * 
+     * @return the text to insert
+     */
     public String getTextToInsert() {
         return textToInsert;
     }
 
-    // Setter to define the text to insert before executing the insert command
+    /**
+     * Sets the text to be inserted.
+     * 
+     * @param text the text to insert
+     */
     public void setTextToInsert(String text) {
         this.textToInsert = text;
     }
-    // getteurs et setteurs pour la selection
+
+    /**
+     * Retrieves the begin index of the text selection.
+     * 
+     * @return the begin index
+     */
 
     public int getBeginIndex() {
         return beginIndex;
     }
 
-    public int getEndIndex() {
-        return endIndex;
-    }
-
     /**
-     * Defines a new selection and checks that the indices are valid.
+     * Sets the begin index of the text selection.
      * 
-     * @param begin the begin index of the selection
-     * @param end   the end index of the selection
-     * @throws IllegalArgumentException if the indices are out of bounds or
-     *                                  inconsistent
+     * @param beginIndex the begin index
+     * @throws IllegalArgumentException if the index is invalid
      */
     public void setBeginIndex(int beginIndex) {
 
         this.beginIndex = beginIndex;
     }
+
+    /**
+     * Retrieves the end index of the text selection.
+     * 
+     * @return the end index
+     */
+    public int getEndIndex() {
+        return endIndex;
+    }
+
+    /**
+     * Sets the end index of the text selection.
+     * 
+     * @param endIndex the end index
+     * @throws IllegalArgumentException if the index is invalid
+     */
 
     public void setEndIndex(int endIndex) {
 
@@ -94,32 +132,32 @@ public class Invoker {
     }
 
     /**
-     * Executes a command originator based on the given identifier.
+     * Executes a {@link CommandOriginator} based on the given identifier.
      * 
      * @param id the identifier of the command to execute
      */
     public void playCommand(String id) {
-        // Check if the command exists in the map before executing it
         if (map.containsKey(id)) {
             map.get(id).execute();
         } else {
-            // If the command does not exist, print an error message
+
             System.out.println("la clé spécifié n'existe pas ");
         }
     }
-        /**
+
+    /**
      * Executes a command concrete based on the given identifier.
      * 
      * @param id the identifier of the command to execute
      */
 
-     public void playCommandConcrete(String id) {
-        // Check if the command exists in the map before executing it
+    public void playCommandConcrete(String id) {
+
         if (mapCommand.containsKey(id)) {
             mapCommand.get(id).execute();
-            
+
         } else {
-            // If the command does not exist, print an error message
+
             System.out.println("la clé spécifié n'existe pas ");
         }
     }

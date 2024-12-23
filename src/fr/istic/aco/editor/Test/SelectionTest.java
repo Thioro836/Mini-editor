@@ -18,9 +18,7 @@ public class SelectionTest {
 
     }
 
-    private void todo() {
-        fail("Unimplemented test");
-    }
+   
     @Test
     @DisplayName("Test de création de la sélection par défaut")
     void createSelection(){

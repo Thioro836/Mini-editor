@@ -29,9 +29,7 @@ public class RecorderTest {
        invoker = new Invoker(engine, selection,recorder);
     }
 
-    private void todo() {
-        fail("Unimplemented test");
-    }
+
     @Test
     void start(){ 
         cOriginator=new InsertCommand(engine,invoker, recorder); 

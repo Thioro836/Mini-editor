@@ -19,9 +19,6 @@ class EngineTest {
          selection = engine.getSelection();
     }
 
-    private void todo() {
-        fail("Unimplemented test");
-    }
     @Test
     @DisplayName("Buffer must be empty after initialisation")
     void getSelection() {

@@ -5,10 +5,31 @@ import fr.istic.aco.editor.ClassImpl.Invoker;
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Selection;
 
+/**
+ * The {@code TextualInterface} class provides a textual user interface for
+ * interacting with a text editor.
+ * This class allows the user to issue commands such as inserting text, cutting,
+ * copying, pasting,
+ * selecting portions of text, starting/stopping recording, and replaying
+ * recorded commands.
+ * <p>
+ * It uses the {@link Invoker} class to execute commands and the {@link Engine}
+ * class to manage
+ * the text buffer and clipboard contents.
+ * </p>
+ */
 public class TextualInterface {
     private Invoker invoker;
     private Scanner scanner;
     private Engine engine;
+
+    /**
+     * Constructs a new {@code TextualInterface}.
+     * 
+     * @param invoker the {@link Invoker} instance used to execute commands
+     * @param engine  the {@link Engine} instance used to manage the buffer and
+     *                clipboard
+     */
 
     public TextualInterface(Invoker invoker, Engine engine) {
         this.invoker = invoker;
@@ -16,6 +37,12 @@ public class TextualInterface {
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Starts the textual interface and continuously prompts the user for commands.
+     * The loop continues until the user chooses to exit.
+     * Available commands include insert, cut, copy, paste, selection, start, stop,
+     * replay, and exit.
+     */
     public void start() {
         System.out.println("Welcome to our text editor");
 
@@ -76,6 +103,10 @@ public class TextualInterface {
         }
     }
 
+    /**
+     * Handles the "insert" command by prompting the user to enter text to insert
+     * into the buffer.
+     */
     private void handleInsert() {
         System.out.print("Enter the text to insert: ");
         String text = scanner.nextLine();
@@ -84,26 +115,37 @@ public class TextualInterface {
         showText();
     }
 
+    /**
+     * Handles the "selection" command by prompting the user to enter the start and
+     * end indices
+     * for text selection.
+     */
     private void handleSelection() {
         System.out.print("Start of selection index: ");
         int begin = scanner.nextInt();
         System.out.print("End of selection index: ");
         int end = scanner.nextInt();
-        scanner.nextLine(); 
+        scanner.nextLine();
         invoker.setBeginIndex(begin);
         invoker.setEndIndex(end);
         invoker.playCommand("selection");
-       
+
     }
 
+    /**
+     * Displays the current contents of the text buffer.
+     */
     private void showText() {
         String currentText = engine.getBufferContents();
         System.out.println("Buffer content: " + currentText);
     }
 
+    /**
+     * Displays the current contents of the clipboard.
+     */
     private void showClipboard() {
         String clipboardContent = engine.getClipboardContents();
         System.out.println("Clipboard content: " + clipboardContent);
     }
-    
+
 }
