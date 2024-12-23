@@ -21,8 +21,8 @@ public class UndoManager {
     // enregistrer l'état de l'engine
     public void store() {
         Memento m = engine.getMemento();
-        EditorMemento editorMemento = (EditorMemento) m;
-        System.out.println("Storing state: " + editorMemento.getBufferContent());
+        EditorMemento editorMemento = (EditorMemento)m;
+        //System.out.println("Storing state: " + editorMemento.getBufferContent());
 
         pastStates.add(editorMemento);
         futurStates.clear();
@@ -30,24 +30,36 @@ public class UndoManager {
     }
 
     // revenir en arrière
+    
     public void undo() {
         if (!pastStates.isEmpty()) {
-            EditorMemento currentState = (EditorMemento) engine.getMemento();
-            futurStates.add(0, currentState);
-            EditorMemento previousState = pastStates.remove(pastStates.size() - 1);
-            engine.setMemento(previousState);
+            // Sauvegarder l'état actuel dans les états futurs
+           // Memento currentMemento = engine.getMemento();
+            EditorMemento currentState = (EditorMemento)engine.getMemento();
+            futurStates.add(0,currentState);
+    
             // Restaurer l'état précédent
-            System.out.println("Undo to state: " + previousState.getBufferContent());
+            EditorMemento previousMemento = pastStates.remove(pastStates.size() - 1);
+            engine.setMemento(previousMemento);
         }
     }
+    
 
     public void redo() {
         if (!futurStates.isEmpty()) {
-            EditorMemento currentState = (EditorMemento) engine.getMemento();
+            EditorMemento currentState = (EditorMemento)engine.getMemento();
             pastStates.add(currentState);
             EditorMemento nextState = futurStates.remove(futurStates.size() - 1);
             engine.setMemento(nextState);
         }
 
+    }
+
+    public List<EditorMemento> getPastStates() {
+        return this.pastStates;
+    }
+
+    public List<EditorMemento> getFuturStates() {
+        return this.futurStates;
     }
 }

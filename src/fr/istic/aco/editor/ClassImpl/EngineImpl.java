@@ -62,7 +62,6 @@ public class EngineImpl implements Engine {
     public String getBufferContents() {
         return buffer.toString();
     }
-
     /**
      * Provides the clipboard contents
      *
@@ -135,7 +134,7 @@ public class EngineImpl implements Engine {
     public void setMemento(Memento m) {
         EditorMemento editorMemento = (EditorMemento) m;
         System.out.println("Restoring state: " + editorMemento.getBufferContent());
-        // this.buffer = new StringBuilder(editorMemento.getBufferContent());
+         this.buffer = new StringBuilder(editorMemento.getBufferContent());
         buffer.setLength(0); // Vide le buffer actuel
         buffer.append(editorMemento.getBufferContent());
         this.selection.setBeginIndex(editorMemento.getBeginIndex());

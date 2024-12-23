@@ -88,7 +88,7 @@ public class SelectionImpl implements Selection {
      */
 
     public void setEndIndex(int endIndex) {
-        if (endIndex < beginIndex || endIndex > buffer.length()) {
+        if (endIndex < beginIndex || endIndex > getBufferEndIndex()) {
             throw new IndexOutOfBoundsException(
                     "End index must be greater than or equal to beginIndex and within buffer range");
         }
