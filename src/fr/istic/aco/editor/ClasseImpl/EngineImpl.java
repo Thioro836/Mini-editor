@@ -7,7 +7,7 @@ public class EngineImpl implements Engine {
         private StringBuilder buffer;
         private String clipboard;
         private SelectionImpl selection ; 
-        /*constructeur de la classe */
+      
         public EngineImpl(){
             buffer= new StringBuilder();
             clipboard ="";
@@ -57,7 +57,6 @@ public class EngineImpl implements Engine {
          */
         @Override
         public String getClipboardContents() {
-            // TODO
             return clipboard.toString();
         }
 

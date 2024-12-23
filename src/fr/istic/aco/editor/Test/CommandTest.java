@@ -10,11 +10,18 @@ import fr.istic.aco.editor.Interface.Selection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for command implementations in the text editor.
+ */
+
 public class CommandTest {
     private Engine engine;
     private Invoker invoker; // Instance d'Invoker
     private Selection selection;
 
+    /**
+     * Set up the test environment before each test case.
+     */
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
         engine = new EngineImpl();
@@ -22,22 +29,22 @@ public class CommandTest {
         invoker = new Invoker(engine, selection);
     }
 
-    private void todo() {
-        fail("Unimplemented test");
-    }
-
+    /**
+     * Test the InsertCommand functionality.
+     */
     @Test
+    @DisplayName("Test Insert Command")
     void insertCommandTest() {
-        // in the beginning buffer is empty
+        // Initially, the buffer is empty
         assertEquals("", engine.getBufferContents());
 
-        // Define the text to insert before executing the insert command
+        // Insert text into the buffer
         invoker.setTextToInsert("abcde");
         invoker.playCommand("insert");
-        // Check that the text "abcde" has been inserted into the buffer
         assertEquals("abcde", invoker.getTextToInsert());
         assertEquals("abcde", engine.getBufferContents());
-        // repeat the process
+
+        // Insert more text and verify the result
         invoker.setTextToInsert("fgh");
         invoker.playCommand("insert");
 
@@ -45,15 +52,17 @@ public class CommandTest {
         assertEquals("abcdefgh", engine.getBufferContents());
     }
 
+    /**
+     * Test the SelectionCommand functionality.
+     */
     @Test
+    @DisplayName("Test Selection Command")
     void SelectionCommandTest() {
-        // Define the text to insert before executing the selection command
+
         invoker.setTextToInsert("abcde");
         invoker.playCommand("insert");
-
-        // Setting the selection indices
-        invoker.setBeginIndex(2); // Index 2
-        invoker.setEndIndex(4); // Index 4
+        invoker.setBeginIndex(2);
+        invoker.setEndIndex(4);
 
         invoker.playCommand("selection");
 
@@ -61,13 +70,17 @@ public class CommandTest {
         assertEquals(4, selection.getEndIndex());
     }
 
+    /**
+     * Test the CopyCommand functionality.
+     */
     @Test
+    @DisplayName("Test Copy Command")
     void CopyCommandTest() {
         invoker.setTextToInsert("abcd");
-          invoker.playCommand("insert");
-        // Avant d'exécuter la commande de copie
+        invoker.playCommand("insert");
+
         invoker.setBeginIndex(0);
-        invoker.setEndIndex(2); // Sélectionne tout le texte disponible
+        invoker.setEndIndex(2);
         invoker.playCommand("selection");
 
         invoker.playCommand("copy");
@@ -77,12 +90,15 @@ public class CommandTest {
 
     }
 
+    /**
+     * Test the CutCommand functionality.
+     */
     @Test
+    @DisplayName("Test Cut Command")
     void cutCommandTest() {
         invoker.setTextToInsert("abcdefg");
         invoker.playCommand("insert");
 
-        // Avant d'exécuter la commande de copie
         invoker.setBeginIndex(2);
         invoker.setEndIndex(5);
         invoker.playCommand("selection");
@@ -93,42 +109,52 @@ public class CommandTest {
         assertEquals("abfg", engine.getBufferContents());
 
     }
-    @Test 
-    void pasteCommandTest(){
-        //insérer dans le buffer
+
+    /**
+     * Test the PasteCommand functionality.
+     */
+    @Test
+    @DisplayName("Test Paste Command")
+    void pasteCommandTest() {
+
         invoker.setTextToInsert("abcdef");
         invoker.playCommand("insert");
-        //faire la sélection
+
         invoker.setBeginIndex(2);
         invoker.setEndIndex(4);
         invoker.playCommand("selection");
-        //copier le texte
+
         invoker.playCommand("copy");
-        //coller le texte a cette position
+
         invoker.setBeginIndex(0);
         invoker.setEndIndex(2);
         invoker.playCommand("selection");
-        //appeler la commande pour coller le texte
+
         invoker.playCommand("delete");
         invoker.playCommand("paste");
         assertEquals("cd", engine.getClipboardContents());
         assertEquals("cdcdef", engine.getBufferContents());
-        //assertEquals(invoker.getBeginIndex(), 2);
+
         assertEquals(invoker.getEndIndex(), 2);
 
     }
+
+    /**
+     * Test the DeleteCommand functionality.
+     */
     @Test
-    void deleteCommandTest(){
+    @DisplayName("Test Delete Command")
+    void deleteCommandTest() {
         invoker.setTextToInsert("abcde");
         invoker.playCommand("insert");
-        //selectionner le texte à supprimer
+
         invoker.setBeginIndex(2);
         invoker.setEndIndex(4);
         invoker.playCommand("selection");
-        //supprimer le texte
+
         invoker.playCommand("delete");
         assertEquals("abe", engine.getBufferContents());
         assertEquals(2, invoker.getBeginIndex());
-        //assertEquals(2,invoker.getEndIndex());
+
     }
 }

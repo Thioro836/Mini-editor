@@ -11,18 +11,29 @@ import fr.istic.aco.editor.ConcreteCommand.SelectionCommand;
 import fr.istic.aco.editor.Interface.Command;
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Selection;
-
 import java.util.HashMap;
 
+/**
+ * The  Invoker class acts as an intermediary between the user and the
+ * command objects.
+ * It initializes and stores different commands in a map and provides methods to
+ * execute them.
+ * This class also manages the text insertion and selection indices.
+ */
 public class Invoker {
-    // Map to store commands associated with an identifier (String)
     private Map<String, Command> map;
     private Engine engine;
     private Selection selection;
-    private InsertCommand insertCommand; // Specific command for inserting text
-    private String textToInsert; // text to insert
-    int beginIndex, endIndex; // Indices for text selection
+    private InsertCommand insertCommand;
+    private String textToInsert;
+    int beginIndex, endIndex;
 
+    /**
+     * Constructs an object and initializes the command map and related fields.
+     * 
+     * @param engine    used for executing text-related commands
+     * @param selection used for managing text selection
+     */
     public Invoker(Engine engine, Selection selection) {
         map = new HashMap<>();
         this.engine = engine;
@@ -31,30 +42,49 @@ public class Invoker {
         this.beginIndex = 0;
         this.endIndex = 0;
         // Initializing the different commands with Engine and/or Selection
-        insertCommand = new InsertCommand(engine, this); 
+        insertCommand = new InsertCommand(engine, this);
         map.put("insert", insertCommand);
         map.put("cut", new CutCommand(engine, selection));
         map.put("copy", new CopyCommand(engine, selection));
-        map.put("delete", new DeleteCommand(engine,selection));
-        map.put("paste", new PasteCommand(engine,selection));
+        map.put("delete", new DeleteCommand(engine, selection));
+        map.put("paste", new PasteCommand(engine, selection));
         map.put("selection", new SelectionCommand(selection, this));
 
     }
 
-    // Getter to retrieve the text to insert
+    /**
+     * Retrieves the text that will be inserted.
+     * 
+     * @return the text to insert
+     */
     public String getTextToInsert() {
         return textToInsert;
     }
 
-    // Setter to define the text to insert before executing the insert command
+    /**
+     * Sets the text to be inserted by the insert command.
+     * 
+     * @param text the text to insert
+     */
     public void setTextToInsert(String text) {
         this.textToInsert = text;
     }
-    // getteurs et setteurs pour la selection
+
+    /**
+     * Retrieves the starting index of the selection.
+     * 
+     * @return the starting index of the selection
+     */
 
     public int getBeginIndex() {
         return beginIndex;
     }
+
+    /**
+     * Retrieves the ending index of the selection.
+     * 
+     * @return the ending index of the selection
+     */
 
     public int getEndIndex() {
         return endIndex;
@@ -73,6 +103,12 @@ public class Invoker {
         this.beginIndex = beginIndex;
     }
 
+    /**
+     * Sets the ending index of the selection.
+     * 
+     * @param endIndex the ending index of the selection
+     */
+
     public void setEndIndex(int endIndex) {
 
         this.endIndex = endIndex;
@@ -82,13 +118,13 @@ public class Invoker {
      * Executes a command based on the given identifier.
      * 
      * @param id the identifier of the command to execute
+     * @throws IllegalArgumentException if the command identifier does not exist in
+     *                                  the map
      */
     public void playCommand(String id) {
-        // Check if the command exists in the map before executing it
         if (map.containsKey(id)) {
             map.get(id).execute();
         } else {
-            // If the command does not exist, print an error message
             System.out.println("la clé spécifié n'existe pas ");
         }
 
