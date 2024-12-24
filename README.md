@@ -11,7 +11,7 @@ Ce projet est un mini-éditeur de texte implémentant plusieurs fonctionnalités
 - **V3** : Annulation et rétablissement des commandes sans limite d'historique.
 
 ## Contenu du Dépôt
-Le dépôt contient les éléments suivants :
+Le dépôt contient les trois versions avec les éléments suivants :
 
 - **Sources Java** : Les fichiers sources organisés par fonctionnalité.
 - **Cas de tests JUnit** : Tests unitaires vérifiant la conformité des fonctionnalités.
@@ -42,7 +42,7 @@ Le dépôt contient les éléments suivants :
 1. Assurez-vous d’avoir Java 8+ installé sur votre machine.
 2. Clonez ce dépôt en utilisant la commande :
 
-   git clone [URL_DU_DEPOT]<https://gitlab2.istic.univ-rennes1.fr./fbah/editor2020>
+   git clone <https://gitlab2.istic.univ-rennes1.fr./fbah/editor2020>
 
 
 ### Commandes de l’Interface Utilisateur
