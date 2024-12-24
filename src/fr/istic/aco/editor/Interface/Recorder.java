@@ -1,5 +1,11 @@
 package fr.istic.aco.editor.Interface;
 
+/**
+ * This interface defines the Recorder in the Command pattern with Memento.
+ * It provides methods for starting and stopping recording commands, saving
+ * commands,
+ * replaying recorded commands, and retrieving the number of recorded commands.
+ */
 public interface Recorder {
 
     /**
@@ -36,6 +42,11 @@ public interface Recorder {
      * @return the size of the list of recorded commands
      */
     int getList();
-    /* */
-     boolean isReplaying();
+
+    /**
+     * Checks if the recorder is currently replaying commands.
+     * 
+     * @return {@code true} if replaying is in progress, {@code false} otherwise
+     */
+    boolean isReplaying();
 }

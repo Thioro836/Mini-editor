@@ -1,13 +1,4 @@
 
-/**
- * The {@code RecorderImpl} class implements the {@code Recorder} interface 
- * and provides functionality to record, save, and replay commands along with their states.
- * <p>
- * This implementation uses an internal {@code Pair} class to store the 
- * association between a command and its corresponding memento (state).
- * It maintains a list of these pairs to enable recording and replaying of commands.
- */
-
 package fr.istic.aco.editor.ClassImpl;
 
 import java.util.ArrayList;
@@ -15,6 +6,17 @@ import java.util.List;
 import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Memento;
 import fr.istic.aco.editor.Interface.Recorder;
+
+/**
+ * The {@code RecorderImpl} class implements the {@code Recorder} interface
+ * and provides functionality to record, save, and replay commands along with
+ * their states.
+ * <p>
+ * This implementation uses an internal {@code Pair} class to store the
+ * association between a command and its corresponding memento (state).
+ * It maintains a list of these pairs to enable recording and replaying of
+ * commands.
+ */
 
 public class RecorderImpl implements Recorder {
 

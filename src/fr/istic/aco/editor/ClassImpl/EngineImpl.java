@@ -2,13 +2,20 @@ package fr.istic.aco.editor.ClassImpl;
 
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Selection;
+/**
+ * Implementation of the Engine interface that provides text editing functionalities
+ * such as inserting, cutting, copying, pasting, and deleting text within a buffer.
+ */
 
 public class EngineImpl implements Engine {
     private StringBuilder buffer;
     private String clipboard;
     private SelectionImpl selection;
 
-    /* constructeur de la classe */
+   /**
+     * Constructs an EngineImpl object with an empty buffer, empty clipboard, and a new selection.
+     */
+
     public EngineImpl() {
         buffer = new StringBuilder();
         clipboard = "";

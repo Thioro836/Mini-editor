@@ -3,6 +3,16 @@ package fr.istic.aco.editor.ClassImpl;
 import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Memento;
 
+/**
+ * The {@code Pair} class is a generic class that holds a pair of objects:
+ * a {@code CommandOriginator} and its corresponding {@code Memento}.
+ * This class is used to store a command along with its state so that it can be
+ * restored later.
+ * 
+ * @param <CommandOriginator> the type of the command being stored
+ * @param <Memento>           the type of the memento representing the command's
+ *                            state
+ */
 public class Pair<CommandOriginator, Memento> {
 
     private CommandOriginator command;
