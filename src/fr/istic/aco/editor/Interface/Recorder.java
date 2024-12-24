@@ -36,5 +36,6 @@ public interface Recorder {
      * @return the size of the list of recorded commands
      */
     int getList();
-
+    /* */
+     boolean isReplaying();
 }

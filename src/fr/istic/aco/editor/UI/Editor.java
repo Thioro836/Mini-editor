@@ -24,7 +24,7 @@ public class Editor {
      * It initializes the necessary components and starts the
      * {@link TextualInterface}.
      */
-    public class Main {
+   
 
         /**
          * The main method that initializes the {@link Engine}, {@link Selection},
@@ -45,4 +45,4 @@ public class Editor {
         }
     }
 
-}
+

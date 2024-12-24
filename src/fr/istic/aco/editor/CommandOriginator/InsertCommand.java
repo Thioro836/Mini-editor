@@ -49,12 +49,13 @@ public class InsertCommand implements CommandOriginator {
 
     @Override
     public void execute() {
-        engine.insert(inv.getTextToInsert());
-        if (this.recording) {
-            recorder.save(this);
-
+        if (!recorder.isReplaying()) {
+            this.textToInsert = inv.getTextToInsert();
         }
+        engine.insert(textToInsert);
+        recorder.save(this);
     }
+
 
     /**
      * Gets the memento for this command. It creates and returns an

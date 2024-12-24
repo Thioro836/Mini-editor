@@ -20,7 +20,7 @@ public class SelectionCommand implements CommandOriginator {
     private Invoker inv;
     private Recorder recorder;
     private int begin, end;
-    private boolean recording=true;
+    private boolean recording;
 
     /**
      * Constructs a {@code SelectionCommand} with the specified selection, invoker,
@@ -36,6 +36,10 @@ public class SelectionCommand implements CommandOriginator {
         this.selection = selection;
         this.inv = inv;
         this.recorder = recorder;
+        begin = 0;
+        end = 0;
+        recording = false;
+
     }
 
     /**
@@ -47,14 +51,20 @@ public class SelectionCommand implements CommandOriginator {
      */
     @Override
     public void execute() {
-
-        selection.setBeginIndex(inv.getBeginIndex());
-        selection.setEndIndex(inv.getEndIndex());
-        if (recording) {
-            recorder.save(this);
+        if (!recorder.isReplaying()) {
+            this.begin = inv.getBeginIndex();
+            this.end = inv.getEndIndex();
         }
 
+        selection.setBeginIndex(this.begin);
+        selection.setEndIndex(this.end);
+
+        recorder.save(this);
+        System.out.println("Sélection enregistrée: Begin Index: " + selection.getBeginIndex() + ", End Index: "
+                + selection.getEndIndex());
+
     }
+
 
     /**
      * Gets the memento for this command, capturing the current selection state.
@@ -64,8 +74,11 @@ public class SelectionCommand implements CommandOriginator {
      */
     @Override
     public Memento getMemento() {
+        begin = inv.getBeginIndex();
+        end = inv.getEndIndex();
         return new SelectMemento(begin, end);
     }
+
 
     /**
      * Sets the memento for this command, restoring the selection state.
@@ -78,6 +91,8 @@ public class SelectionCommand implements CommandOriginator {
         SelectMemento selectMemento = (SelectMemento) memento;
         this.begin = selectMemento.getBeginIndex();
         this.end = selectMemento.getEndIndex();
+
     }
+
 
 }
