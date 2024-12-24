@@ -13,6 +13,7 @@ public class DeleteCommand implements Command {
     private Selection selection;
 
     /**
+     * Constructs an {@code DeleteCommand} with the specified engine and invoker.
      * 
      * @param engine    the engine to perform the delete operation
      * @param selection the selection object that provides the selected text range

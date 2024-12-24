@@ -12,7 +12,8 @@ public class CutCommand implements Command {
     private Engine engine;
     private Selection selection;
 
-    /**
+   /**
+     * Constructs an {@code  CutCommand} with the specified engine and invoker.
      * 
      * @param engine    the engine to perform the cut operation
      * @param selection the selection object that provides the selected text range

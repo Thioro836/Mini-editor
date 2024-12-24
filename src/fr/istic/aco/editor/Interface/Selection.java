@@ -12,7 +12,7 @@ public interface Selection {
      * Provides the index of the first character designated
      * by the selection.
      *
-     * @return
+     * @return the begin index of the selection
      */
     int getBeginIndex();
 
@@ -55,6 +55,5 @@ public interface Selection {
      * @throws IndexOutOfBoundsException if the beginIndex is out of bounds
      */
     void setEndIndex(int endIndex);
-
 
 }

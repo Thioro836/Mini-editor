@@ -11,9 +11,9 @@ import fr.istic.aco.editor.Interface.Selection;
 public class CopyCommand implements Command {
   private Engine engine;
   private Selection selection;
-
-  /**
-   * 
+    /**
+     * Constructs an {@code CopyCommand} with the specified engine and invoker.
+     * 
    * @param engine    the engine to perform the copy operation
    * @param selection the selection object that provides the selected text range
    */

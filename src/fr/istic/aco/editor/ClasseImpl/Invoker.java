@@ -91,12 +91,9 @@ public class Invoker {
     }
 
     /**
-     * Defines a new selection and checks that the indices are valid.
+     * Sets the ending index of the selection.
      * 
-     * @param begin the begin index of the selection
-     * @param end   the end index of the selection
-     * @throws IllegalArgumentException if the indices are out of bounds or
-     *                                  inconsistent
+     * @param beginIndex the ending index of the selection
      */
     public void setBeginIndex(int beginIndex) {
 
@@ -119,7 +116,7 @@ public class Invoker {
      * 
      * @param id the identifier of the command to execute
      * @throws IllegalArgumentException if the command identifier does not exist in
-     *                                  the map
+     *  the map
      */
     public void playCommand(String id) {
         if (map.containsKey(id)) {
