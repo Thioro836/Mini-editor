@@ -16,7 +16,7 @@ Le dépôt contient les trois versions avec les éléments suivants :
 - **Sources Java** : Les fichiers sources organisés par fonctionnalité.
 - **Cas de tests JUnit** : Tests unitaires vérifiant la conformité des fonctionnalités.
 - **Javadoc** : Documentation du code générée au format HTML.
-- **Rapport de conception** : Document PDF expliquant les choix de conception, la synthèse des tests et les instructions d’utilisation.
+- **Rapport de conception** : Document PDF expliquant les choix de conception, la synthèse des tests et les instructions d’utilisation. Se trouve sur la branche newV3.
 - **README.md** : Ce fichier contenant une présentation globale du projet.
 
 ## Fonctionnalités
