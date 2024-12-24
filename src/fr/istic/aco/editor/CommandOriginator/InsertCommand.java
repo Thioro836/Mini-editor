@@ -21,7 +21,7 @@ public class InsertCommand implements CommandOriginator {
     private Invoker inv;
     private String textToInsert;
     private Recorder recorder;
-    private boolean recording;
+    private boolean recording=true;
 
     /**
      * Constructs an {@code InsertCommand} with the specified engine, invoker, and

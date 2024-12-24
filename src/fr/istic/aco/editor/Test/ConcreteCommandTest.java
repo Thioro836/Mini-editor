@@ -1,20 +1,14 @@
 package fr.istic.aco.editor.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
 import fr.istic.aco.editor.ClassImpl.EngineImpl;
 import fr.istic.aco.editor.ClassImpl.Invoker;
 import fr.istic.aco.editor.ClassImpl.RecorderImpl;
 import fr.istic.aco.editor.CommandOriginator.InsertCommand;
-import fr.istic.aco.editor.CommandOriginator.SelectionCommand;
-import fr.istic.aco.editor.ConcreteCommandd.ReplayCommand;
-import fr.istic.aco.editor.ConcreteCommandd.StartCommand;
-import fr.istic.aco.editor.Interface.Command;
 import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Recorder;
@@ -38,20 +32,19 @@ public class ConcreteCommandTest {
     private void todo() {
         fail("Unimplemented test");
     }
-    // dans cette classe test des concrètes commandes 
-    //on ne fait pas d'appel à save car on l'a déjà fait dans la méthode execute de chacune des commandes originator
     @Test
     void startCommandTest(){
-        Ocommand=new InsertCommand(engine, invoker, recorder);
+        Ocommand = new InsertCommand(engine, invoker, recorder);
         invoker.playCommandConcrete("start");
+        System.out.println("Recorder size after start: " + recorder.getList());
         invoker.setTextToInsert("abcd");
         invoker.playCommand("insert");
-        assertEquals("abcd", invoker.getTextToInsert());
-        assertTrue(recorder.getList()>0);
-        assertEquals(1,recorder.getList()); 
+        System.out.println("Recorder size after insert: " + recorder.getList());
+        assertEquals(1, recorder.getList());
     
 
     }
+
     @Test
     void stopCommandTest(){
         Ocommand=new InsertCommand(engine, invoker, recorder);

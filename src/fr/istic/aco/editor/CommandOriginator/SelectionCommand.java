@@ -20,7 +20,7 @@ public class SelectionCommand implements CommandOriginator {
     private Invoker inv;
     private Recorder recorder;
     private int begin, end;
-    private boolean recording;
+    private boolean recording=true;
 
     /**
      * Constructs a {@code SelectionCommand} with the specified selection, invoker,
