@@ -1,6 +1,7 @@
 package fr.istic.aco.editor.CommandOriginator;
 
 import fr.istic.aco.editor.ClassImpl.Invoker;
+import fr.istic.aco.editor.ClassImpl.UndoManager;
 import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Memento;
 import fr.istic.aco.editor.Interface.Selection;
@@ -13,11 +14,13 @@ public class SelectionCommand implements CommandOriginator {
     private Recorder recorder;
     private int begin, end;
     private boolean recording;
+    private UndoManager undoManager;
 
-    public SelectionCommand(Selection selection, Invoker inv, Recorder recorder) {
+    public SelectionCommand(Selection selection, Invoker inv, Recorder recorder,UndoManager undoManager) {
         this.selection = selection;
         this.inv = inv;
         this.recorder = recorder;
+        this.undoManager=undoManager;
         begin = 0;
         end = 0;
         recording = false;
@@ -34,6 +37,7 @@ public class SelectionCommand implements CommandOriginator {
         selection.setEndIndex(this.end);
 
         recorder.save(this);
+        undoManager.store();
         System.out.println("Sélection enregistrée: Begin Index: " + selection.getBeginIndex() + ", End Index: "
                 + selection.getEndIndex());
 

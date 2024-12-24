@@ -9,9 +9,10 @@ public class EditorMemento implements Memento {
         private String clipboard;
 
          public EditorMemento(String buffer, int begin,int end, String clipboard){
-            this.bufferContent=buffer;
-            this.beginIndex=begin;
-            this.endIndex=end;
+            this.bufferContent = buffer != null ? buffer : "";
+            this.beginIndex = begin;
+            this.endIndex = end;
+            this.clipboard = clipboard != null ? clipboard : "";
          }
          public String getBufferContent(){
             return bufferContent;

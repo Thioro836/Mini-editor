@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import fr.istic.aco.editor.ClassImpl.EngineImpl;
 import fr.istic.aco.editor.ClassImpl.UndoManager;
 import fr.istic.aco.editor.Interface.Engine;
+import fr.istic.aco.editor.Memento.EditorMemento;
 
 public class UndoManagerTest {
       private UndoManager undoManager;
@@ -37,20 +38,43 @@ public class UndoManagerTest {
         assertEquals("abcd123", undoManager.getPastStates().get(2).getBufferContent());
        
     }
-    @Test
+    @Test    
     public void testStoreAndUndo() {
-        undoManager.store();
-        engine.insert("abcd");
-        undoManager.store(); // Sauvegarder "abcd"
-
-        engine.insert("123");
-        undoManager.store(); // Sauvegarder "abcd123"
-        assertEquals(3, undoManager.getPastStates().size());
-        undoManager.undo(); // Revenir à "abcd"
-        System.out.println("Buffer content after undo: " + engine.getBufferContents());
+        System.out.println("Initial buffer: " + engine.getBufferContents());
+        assertEquals("", engine.getBufferContents());
         
+        engine.insert("abcd");  
+        undoManager.store();    
+        System.out.println("After first insert: " + engine.getBufferContents());
+        System.out.println("Past states size: " + undoManager.getPastStates().size());
+        assertEquals("abcd", engine.getBufferContents());
+        assertEquals(1, undoManager.getPastStates().size());
+        
+        engine.insert("123");  
+        undoManager.store();     
+        System.out.println("After second insert: " + engine.getBufferContents());
+        System.out.println("Past states size: " + undoManager.getPastStates().size());
+        assertEquals("abcd123", engine.getBufferContents());
         assertEquals(2, undoManager.getPastStates().size());
-        //assertEquals("abcd", engine.getBufferContents());
+        
+        // Avant undo
+        System.out.println("\nBefore undo:");
+        System.out.println("Past states: ");
+        for(EditorMemento m : undoManager.getPastStates()) {
+            System.out.println(" - " + m.getBufferContent());
+        }
+        
+        undoManager.undo();
+        
+        // Après undo
+        System.out.println("\nAfter undo:");
+        System.out.println("Buffer content: " + engine.getBufferContents());
+        System.out.println("Past states size: " + undoManager.getPastStates().size());
+        System.out.println("Future states size: " + undoManager.getFuturStates().size());
+        
+        assertEquals("abcd", engine.getBufferContents());
+        assertEquals(1, undoManager.getPastStates().size());
+        assertEquals(1, undoManager.getFuturStates().size());
     }
 
 

@@ -9,7 +9,7 @@ import fr.istic.aco.editor.Interface.Recorder;
 import fr.istic.aco.editor.Interface.Selection;
 
 public class Editor {
-    public class Main {
+ 
     public static void main(String[] args) {
         Engine engine = new EngineImpl();
         Selection selection = engine.getSelection();
@@ -23,4 +23,4 @@ public class Editor {
 }
 
 
-}
+

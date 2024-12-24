@@ -28,6 +28,7 @@ public class RecorderTest {
         recorder = new RecorderImpl();
        engine=new EngineImpl();
        selection=engine.getSelection();
+       undoManager = new UndoManager(engine);
        invoker = new Invoker(engine, selection,recorder,undoManager);
     }
 
@@ -36,7 +37,7 @@ public class RecorderTest {
     }
     @Test
     void start(){ 
-        cOriginator=new InsertCommand(engine,invoker, recorder); 
+        cOriginator=new InsertCommand(engine,invoker, recorder,undoManager); 
         recorder.start();
         assertEquals("", engine.getBufferContents());
         engine.insert("abcde");
@@ -49,7 +50,7 @@ public class RecorderTest {
     @Test
     void stop(){
         //créer une instance de originatorcommand
-        cOriginator=new SelectionCommand(selection,invoker, recorder); 
+        cOriginator=new SelectionCommand(selection,invoker, recorder,undoManager); 
         //commencer un enregistrement
         recorder.start();
         //insérer du texte
@@ -75,7 +76,7 @@ public class RecorderTest {
     @Test
     void save(){
         //demander à adrien si a chaque execution de commande je dois appeler start et stop ou pas
-       cOriginator=new InsertCommand(engine,invoker, recorder);
+       cOriginator=new InsertCommand(engine,invoker, recorder,undoManager);
        recorder.start(); 
        engine.insert("abcde");
        recorder.save(cOriginator);
@@ -89,7 +90,7 @@ public class RecorderTest {
     }
     @Test 
     void replay(){
-        cOriginator=new InsertCommand(engine,invoker, recorder);
+        cOriginator=new InsertCommand(engine,invoker, recorder,undoManager);
         recorder.start();
         engine.insert("hello");
         recorder.save(cOriginator);

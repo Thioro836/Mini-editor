@@ -95,7 +95,6 @@ public class TextualInterface {
         System.out.print("Enter the text to insert: ");
         String text = scanner.nextLine();
         invoker.setTextToInsert(text);
-        undoManager.store();
         invoker.playCommand("insert");
         showText();
     }

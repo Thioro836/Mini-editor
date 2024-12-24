@@ -45,13 +45,13 @@ public class Invoker {
         this.beginIndex = 0;
         this.endIndex = 0;
         // Initializing the different commands with Engine and/or Selection
-        insertCommand = new InsertCommand(engine, this, recorder);
+        insertCommand = new InsertCommand(engine, this, recorder,undoManager);
         map.put("insert", insertCommand);
         map.put("cut", new CutCommand(engine, selection, recorder));
         map.put("copy", new CopyCommand(engine, selection, recorder));
         map.put("delete", new DeleteCommand(engine, selection, recorder));
         map.put("paste", new PasteCommand(engine, selection, recorder));
-        map.put("selection", new SelectionCommand(selection, this, recorder));
+        map.put("selection", new SelectionCommand(selection, this, recorder,undoManager));
 
         // Initializing the different concrete commands with recorder
         mapCommand.put("start", new StartCommand(recorder));

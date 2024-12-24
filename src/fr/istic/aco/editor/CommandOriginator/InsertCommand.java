@@ -1,6 +1,7 @@
 package fr.istic.aco.editor.CommandOriginator;
 
 import fr.istic.aco.editor.ClassImpl.Invoker;
+import fr.istic.aco.editor.ClassImpl.UndoManager;
 import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Memento;
@@ -12,12 +13,14 @@ public class InsertCommand implements CommandOriginator {
     private Invoker inv;
     private String textToInsert;
     private Recorder recorder;
+    private UndoManager undoManager;
 
     // Rajouter un objet recorder et appeler save dans execute
-    public InsertCommand(Engine engine, Invoker inv, Recorder recorder) {
+    public InsertCommand(Engine engine, Invoker inv, Recorder recorder,UndoManager undoManager) {
         this.engine = engine;
         this.inv = inv;
         this.recorder = recorder;
+        this.undoManager=undoManager;
 
     }
 
@@ -26,8 +29,10 @@ public class InsertCommand implements CommandOriginator {
         if (!recorder.isReplaying()) {
             this.textToInsert = inv.getTextToInsert();
         }
+        undoManager.store();
         engine.insert(textToInsert);
         recorder.save(this);
+       
     }
 
     @Override

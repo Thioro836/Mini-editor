@@ -33,7 +33,7 @@ public class EngineImpl implements Engine {
      */
     @Override
     public void insert(String s) {
-        undoManager.store();
+        //undoManager.store();
         buffer.replace(selection.getBeginIndex(), selection.getEndIndex(), s);
         int end = selection.getBeginIndex() + s.length();
         selection.setBeginIndex(end);
@@ -127,19 +127,39 @@ public class EngineImpl implements Engine {
 
     @Override
     public Memento getMemento() {
-        return new EditorMemento(buffer.toString(), selection.getBeginIndex(), selection.getEndIndex(), clipboard);
+        String currentBuffer = buffer.toString();
+        String currentClipboard = clipboard != null ? clipboard : "";
+        return new EditorMemento(
+            currentBuffer,
+            selection.getBeginIndex(),
+            selection.getEndIndex(),
+            currentClipboard
+        );
     }
 
     @Override
     public void setMemento(Memento m) {
+        if (m == null) {
+            System.out.println("Warning: Null memento received");
+            return;
+        }
+        
         EditorMemento editorMemento = (EditorMemento) m;
-        System.out.println("Restoring state: " + editorMemento.getBufferContent());
-         this.buffer = new StringBuilder(editorMemento.getBufferContent());
-        buffer.setLength(0); // Vide le buffer actuel
-        buffer.append(editorMemento.getBufferContent());
-        this.selection.setBeginIndex(editorMemento.getBeginIndex());
-        this.selection.setEndIndex(editorMemento.getEndIndex());
+        String content = editorMemento.getBufferContent();
+        if (content == null) {
+            System.out.println("Warning: Null buffer content in memento");
+            content = "";
+        }
+        
+        System.out.println("SetMemento: Restoring buffer to: '" + content + "'");
+        
+        buffer.setLength(0);
+        buffer.append(content);
+        selection.setBeginIndex(editorMemento.getBeginIndex());
+        selection.setEndIndex(editorMemento.getEndIndex());
         this.clipboard = editorMemento.getClipboardContent();
+        
+        System.out.println("Buffer content after restoration: '" + buffer.toString() + "'");
     }
 
 }

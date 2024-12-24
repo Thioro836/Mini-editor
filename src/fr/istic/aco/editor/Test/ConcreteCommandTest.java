@@ -34,6 +34,7 @@ public class ConcreteCommandTest {
         engine = new EngineImpl();
         selection = engine.getSelection();
         recorder=new RecorderImpl();
+        undoManager=new UndoManager(engine);
         invoker = new Invoker(engine, selection,recorder,undoManager);
     }
 
@@ -44,7 +45,7 @@ public class ConcreteCommandTest {
     //on ne fait pas d'appel à save car on l'a déjà fait dans la méthode execute de chacune des commandes originator
     @Test
     void startCommandTest(){
-        Ocommand=new InsertCommand(engine, invoker, recorder);
+        Ocommand=new InsertCommand(engine, invoker, recorder,undoManager);
         invoker.playCommandConcrete("start");
         invoker.setTextToInsert("abcd");
         invoker.playCommand("insert");
@@ -56,7 +57,7 @@ public class ConcreteCommandTest {
     }
     @Test
     void stopCommandTest(){
-        Ocommand=new InsertCommand(engine, invoker, recorder);
+        Ocommand=new InsertCommand(engine, invoker, recorder,undoManager);
         invoker.playCommandConcrete("start");
         invoker.setTextToInsert("abcd");
         invoker.playCommand("insert");
@@ -71,7 +72,7 @@ public class ConcreteCommandTest {
     @DisplayName("tester le replay avec une insertion")
     void replayCommandTest(){
         //commencer l'enregistrement
-        Ocommand=new InsertCommand(engine, invoker, recorder);
+        Ocommand=new InsertCommand(engine, invoker, recorder,undoManager);
         invoker.playCommandConcrete("start");
         //insérer du text
         invoker.setTextToInsert("abcd");
@@ -89,7 +90,7 @@ public class ConcreteCommandTest {
     @Test
     @DisplayName("test du replay avec une copy dans le clipboard")
     void replayCommandCopyTest(){
-        Ocommand=new InsertCommand(engine, invoker, recorder);
+        Ocommand=new InsertCommand(engine, invoker, recorder,undoManager);
         invoker.playCommandConcrete("start");
 
         //insérer du text
