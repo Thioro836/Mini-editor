@@ -78,20 +78,31 @@ public class RecorderImpl implements Recorder {
      * Replays all recorded commands in the current session by restoring their
      * mementos and executing them. Saves the replayed commands into the history.
      */
+   
     @Override
     public void replay() {
         replaying = true;
-        historique.addAll(liste); // Sauvegarder l'historique
-        for (Pair<CommandOriginator, Memento> pair : liste) {
-
-            CommandOriginator command = pair.getCommandOriginator();
-            Memento memento = pair.getMemento();
-
-            command.setMemento(memento); // restaurer létat
-            command.execute();
+        try {
+            historique.addAll(liste);
+            for (Pair<CommandOriginator, Memento> pair : liste) {
+                if (pair == null || pair.getCommandOriginator() == null || pair.getMemento() == null) {
+                    System.err.println("Invalid pair in recording list");
+                    continue;
+                }
+    
+                CommandOriginator command = pair.getCommandOriginator();
+                Memento memento = pair.getMemento();
+    
+                try {
+                    command.setMemento(memento);
+                    command.execute();
+                } catch (Exception e) {
+                    System.err.println("Error replaying command: " + e.getMessage());
+                }
+            }
+        } finally {
+            replaying = false;
         }
-
-        replaying = false;
     }
 
     /**

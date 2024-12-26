@@ -20,7 +20,6 @@ public class UndoManagerTest {
         undoManager = new UndoManager(engine);
     }
 
-    
     @Test
     public void testInitialState() {
         assertEquals("", engine.getBufferContents());
@@ -28,7 +27,6 @@ public class UndoManagerTest {
         assertEquals(0, undoManager.getFutureStates().size());
     }
 
-  
     @Test
     public void testStoreMultipleStates() {
         engine.insert("First");
@@ -47,11 +45,10 @@ public class UndoManagerTest {
         engine.insert("Test");
         undoManager.store();
         undoManager.store(); // Tentative de stocker le même état
-        
+
         assertEquals(1, undoManager.getPastStates().size());
     }
 
- 
     @Test
     public void testUndoRedoWithSelection() {
         engine.insert("Hello World");
@@ -69,7 +66,6 @@ public class UndoManagerTest {
         assertEquals(5, engine.getSelection().getEndIndex());
     }
 
-  
     @Test
     public void testComplexUndoRedoSequence() {
         // Séquence: insert -> undo -> insert -> redo
@@ -77,13 +73,13 @@ public class UndoManagerTest {
         undoManager.store();
         engine.insert("Second");
         undoManager.store();
-        
+
         undoManager.undo(); // Retour à "First"
         assertEquals("First", engine.getBufferContents());
-        
+
         engine.insert("Third"); // Nouvelle branche
         undoManager.store();
-        
+
         // Le redo ne devrait pas être possible car nous avons créé une nouvelle branche
         undoManager.redo();
         assertEquals("FirstThird", engine.getBufferContents());
@@ -128,28 +124,28 @@ public class UndoManagerTest {
 
     @Test
     public void testClipboardState() {
-     
+
         engine.insert("Copy this text");
         undoManager.store();
-        
+
         // "Copy"
         engine.getSelection().setBeginIndex(0);
         engine.getSelection().setEndIndex(4);
         engine.copySelectedText();
         undoManager.store();
         assertEquals("Copy", engine.getClipboardContents());
-        
+
         // 3. Couper "this"
         engine.getSelection().setBeginIndex(5);
         engine.getSelection().setEndIndex(9);
         engine.cutSelectedText();
         undoManager.store();
         assertEquals("this", engine.getClipboardContents());
-        
-        // 4. Faire un undo 
+
+        // 4. Faire un undo
         undoManager.undo();
         assertEquals("Copy this text", engine.getBufferContents());
-        assertEquals("Copy", engine.getClipboardContents());  
+        assertEquals("Copy", engine.getClipboardContents());
     }
 
     // Tests de robustesse
@@ -167,23 +163,23 @@ public class UndoManagerTest {
         undoManager.store();
         engine.insert("Text");
         undoManager.store();
-        
+
         undoManager.undo();
         assertEquals("", engine.getBufferContents());
     }
 
     @Test
     public void testUndoRedoWithMaxOperations() {
-        for(int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             engine.insert(String.valueOf(i));
             undoManager.store();
         }
-        
+
         // Vérifions que tous les undo fonctionnent
-        for(int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             undoManager.undo();
         }
-        
+
         assertEquals("", engine.getBufferContents());
     }
 }

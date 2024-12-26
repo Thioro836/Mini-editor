@@ -25,7 +25,7 @@ public class InsertCommand implements CommandOriginator {
      * Constructs an InsertCommand with the specified components.
      *
      * @param engine      the engine that performs editor operations
-     * @param invoker     the invoker that provides user input
+     * @param inv         the invoker that provides user input
      * @param recorder    the recorder for saving and replaying commands
      * @param undoManager the undo manager for managing undo/redo operations
      */
@@ -47,13 +47,13 @@ public class InsertCommand implements CommandOriginator {
     public void execute() {
         if (!recorder.isReplaying()) {
             this.textToInsert = inv.getTextToInsert();
-
+            engine.insert(textToInsert);
+            undoManager.store();
+            recorder.save(this); // Sauvegarder seulement lors de l'exécution initiale
+        } else {
+            engine.insert(textToInsert); // Pendant le replay, juste insérer le texte
+            undoManager.store();
         }
-
-        engine.insert(textToInsert);
-        undoManager.store();
-        recorder.save(this);
-
     }
 
     /**
@@ -74,6 +74,9 @@ public class InsertCommand implements CommandOriginator {
      */
     @Override
     public void setMemento(Memento memento) {
+        if (memento == null) {
+            throw new IllegalArgumentException("Memento cannot be null");
+        }
         InsertMemento insertMemento = (InsertMemento) memento;
         this.textToInsert = insertMemento.getText();
 

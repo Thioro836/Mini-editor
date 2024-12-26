@@ -25,7 +25,7 @@ public class SelectionCommand implements CommandOriginator {
      * Constructs a SelectionCommand with the specified components.
      *
      * @param selection   the selection component for managing text selection
-     * @param invoker     the invoker that provides user input for selection indices
+     * @param inv         the invoker that provides user input for selection indices
      * @param recorder    the recorder for saving and replaying commands
      * @param undoManager the undo manager for managing undo/redo operations
      */

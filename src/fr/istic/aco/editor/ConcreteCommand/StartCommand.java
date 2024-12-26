@@ -11,14 +11,14 @@ import fr.istic.aco.editor.Interface.Recorder;
  */
 
 public class StartCommand implements Command {
+
+    private Recorder recorder;
+
     /**
      * Constructs a {@code StartCommand} with the specified recorder.
      * 
      * @param recorder the recorder that will start recording actions
      */
-
-    private Recorder recorder;
-
     public StartCommand(Recorder recorder) {
         this.recorder = recorder;
     }
