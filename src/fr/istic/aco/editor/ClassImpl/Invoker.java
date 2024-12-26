@@ -18,9 +18,13 @@ import fr.istic.aco.editor.Interface.CommandOriginator;
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Recorder;
 import fr.istic.aco.editor.Interface.Selection;
-
 import java.util.HashMap;
 
+/**
+ * The {@code Invoker} class is responsible for managing and executing both
+ * originator and concrete commands. It acts as a bridge between the user inputs
+ * and the execution of corresponding commands.
+ */
 public class Invoker {
     // Map to store commands originator associated with an identifier (String)
     private Map<String, CommandOriginator> map;
@@ -30,11 +34,19 @@ public class Invoker {
     private Selection selection;
     private UndoManager undoManager;
     private Recorder recorder;
-    private InsertCommand insertCommand; // Specific command for inserting text
-    private String textToInsert; // text to insert
-    private int beginIndex, endIndex; // Indices for text selection
+    private InsertCommand insertCommand;
+    private String textToInsert;
+    private int beginIndex, endIndex;
 
-    public Invoker(Engine engine, Selection selection, Recorder recorder,UndoManager undoManager) {
+    /**
+     * Constructs an {@code Invoker} instance and initializes command mappings.
+     *
+     * @param engine      the engine instance for text manipulation
+     * @param selection   the selection instance for text selection
+     * @param recorder    the recorder instance for recording commands
+     * @param undoManager the undo manager instance for undo/redo functionality
+     */
+    public Invoker(Engine engine, Selection selection, Recorder recorder, UndoManager undoManager) {
         map = new HashMap<>();
         mapCommand = new HashMap<>();
         this.engine = engine;
@@ -44,16 +56,19 @@ public class Invoker {
         this.textToInsert = "";
         this.beginIndex = 0;
         this.endIndex = 0;
-        // Initializing the different commands with Engine and/or Selection
-        insertCommand = new InsertCommand(engine, this, recorder);
+        /**
+         * Initializes both originator and concrete commands and maps them to
+         * identifiers.
+         */
+        insertCommand = new InsertCommand(engine, this, recorder, undoManager);
         map.put("insert", insertCommand);
-        map.put("cut", new CutCommand(engine, selection, recorder));
-        map.put("copy", new CopyCommand(engine, selection, recorder));
-        map.put("delete", new DeleteCommand(engine, selection, recorder));
-        map.put("paste", new PasteCommand(engine, selection, recorder));
-        map.put("selection", new SelectionCommand(selection, this, recorder));
+        map.put("cut", new CutCommand(engine, selection, recorder, undoManager));
+        map.put("copy", new CopyCommand(engine, selection, recorder, undoManager));
+        map.put("delete", new DeleteCommand(engine, selection, recorder, undoManager));
+        map.put("paste", new PasteCommand(engine, selection, recorder, undoManager));
+        map.put("selection", new SelectionCommand(selection, this, recorder, undoManager));
 
-        // Initializing the different concrete commands with recorder
+        // Initialize concrete commands
         mapCommand.put("start", new StartCommand(recorder));
         mapCommand.put("stop", new StopCommand(recorder));
         mapCommand.put("replay", new ReplayCommand(recorder));
@@ -62,38 +77,58 @@ public class Invoker {
 
     }
 
-    // Getter to retrieve the text to insert
+    /**
+     * Gets the text to be inserted.
+     *
+     * @return the text to insert
+     */
     public String getTextToInsert() {
         return textToInsert;
     }
 
-    // Setter to define the text to insert before executing the insert command
+    /**
+     * Sets the text to be inserted.
+     *
+     * @param text the text to insert
+     */
     public void setTextToInsert(String text) {
         this.textToInsert = text;
     }
-    // getteurs et setteurs pour la selection
+
+    /**
+     * Gets the beginning index of the selection.
+     *
+     * @return the begin index
+     */
 
     public int getBeginIndex() {
         return beginIndex;
     }
 
+    /**
+     * Gets the end index of the selection.
+     *
+     * @return the end index
+     */
     public int getEndIndex() {
         return endIndex;
     }
 
     /**
-     * Defines a new selection and checks that the indices are valid.
-     * 
-     * @param begin the begin index of the selection
-     * @param end   the end index of the selection
-     * @throws IllegalArgumentException if the indices are out of bounds or
-     *                                  inconsistent
+     * Sets the beginning index of the selection.
+     *
+     * @param beginIndex the new begin index
      */
     public void setBeginIndex(int beginIndex) {
 
         this.beginIndex = beginIndex;
     }
 
+    /**
+     * Sets the end index of the selection.
+     *
+     * @param endIndex the new end index
+     */
     public void setEndIndex(int endIndex) {
 
         this.endIndex = endIndex;

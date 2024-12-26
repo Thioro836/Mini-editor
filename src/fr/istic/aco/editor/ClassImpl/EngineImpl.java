@@ -1,21 +1,35 @@
 package fr.istic.aco.editor.ClassImpl;
 
+import fr.istic.aco.editor.CommandOriginator.DeleteCommand;
+import fr.istic.aco.editor.CommandOriginator.InsertCommand;
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Memento;
+import fr.istic.aco.editor.Interface.Recorder;
 import fr.istic.aco.editor.Interface.Selection;
 import fr.istic.aco.editor.Memento.EditorMemento;
 
+/**
+ * Implementation of the {@link Engine} interface for a text editor.
+ * This class provides functionalities to manipulate a text buffer,
+ * manage a clipboard, and handle text selection.
+ * <p>
+ * It supports operations such as inserting text, copying and pasting from
+ * the clipboard, cutting selected text, and managing the editor state using
+ * the memento design pattern.
+ * </p>
+ */
 public class EngineImpl implements Engine {
     private StringBuilder buffer;
-    private String clipboard; 
+    private String clipboard;
     private SelectionImpl selection;
     private int begin, end;
 
-    /* constructeur de la classe */
+    /** Constructs an {@code EngineImpl} with an empty buffer and clipboard. */
     public EngineImpl() {
-        buffer = new StringBuilder();
-        clipboard = "";
-        selection = new SelectionImpl(buffer);
+        this.buffer = new StringBuilder();
+        this.clipboard = "";
+        this.selection = new SelectionImpl(buffer);
+
     }
 
     /**
@@ -25,7 +39,7 @@ public class EngineImpl implements Engine {
      */
     @Override
     public void insert(String s) {
-      buffer.replace(selection.getBeginIndex(), selection.getEndIndex(), s);
+        buffer.replace(selection.getBeginIndex(), selection.getEndIndex(), s);
         int end = selection.getBeginIndex() + s.length();
         selection.setBeginIndex(end);
         selection.setEndIndex(end);
@@ -115,17 +129,54 @@ public class EngineImpl implements Engine {
         selection.setEndIndex(selection.getBeginIndex());
     }
 
+    /**
+     * Creates and returns a {@link Memento} object representing the current
+     * state of the engine.
+     *
+     * @return a {@link Memento} object containing the buffer content, selection
+     *         indices,
+     *         and clipboard content
+     */
     @Override
     public Memento getMemento() {
-        return new EditorMemento(buffer.toString(), begin, end, clipboard);
+        String currentBuffer = buffer.toString();
+        String currentClipboard = clipboard != null ? clipboard : "";
+        return new EditorMemento(
+                currentBuffer,
+                selection.getBeginIndex(),
+                selection.getEndIndex(),
+                currentClipboard);
     }
+
+    /**
+     * Restores the state of the engine from the given {@link Memento}.
+     *
+     * @param m the {@link Memento} object containing the state to restore
+     */
 
     @Override
     public void setMemento(Memento m) {
+        if (m == null) {
+            System.out.println("Warning: Null memento received");
+            return;
+        }
+
         EditorMemento editorMemento = (EditorMemento) m;
-        this.begin = editorMemento.getBeginIndex();
-        this.end = editorMemento.getEndIndex();
-        buffer = new StringBuilder(editorMemento.getBufferContent());
-        clipboard = editorMemento.getClipboardContent();
+        String content = editorMemento.getBufferContent();
+        if (content == null) {
+            System.out.println("Warning: Null buffer content in memento");
+            content = "";
+        }
+
+        System.out.println("SetMemento: Restoring buffer to: '" + content + "'");
+
+        buffer.setLength(0);
+        buffer.append(content);
+        selection.setBeginIndex(editorMemento.getBeginIndex());
+        selection.setEndIndex(editorMemento.getEndIndex());
+        this.clipboard = editorMemento.getClipboardContent();
+
+        System.out.println("Buffer content after restoration: '" + buffer.toString() + "'");
     }
+
 }

@@ -21,96 +21,132 @@ import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Recorder;
 import fr.istic.aco.editor.Interface.Selection;
 
-
 public class ConcreteCommandTest {
-   private Engine engine;
+    private Engine engine;
     private Invoker invoker; // Instance d'Invoker
     private Selection selection;
     private Recorder recorder;
     private UndoManager undoManager;
     private CommandOriginator Ocommand;
+
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
         engine = new EngineImpl();
         selection = engine.getSelection();
-        recorder=new RecorderImpl();
-        invoker = new Invoker(engine, selection,recorder,undoManager);
+        recorder = new RecorderImpl();
+        undoManager = new UndoManager(engine);
+        invoker = new Invoker(engine, selection, recorder, undoManager);
     }
 
-    private void todo() {
-        fail("Unimplemented test");
-    }
-    // dans cette classe test des concrètes commandes 
-    //on ne fait pas d'appel à save car on l'a déjà fait dans la méthode execute de chacune des commandes originator
     @Test
-    void startCommandTest(){
-        Ocommand=new InsertCommand(engine, invoker, recorder);
+    void startCommandTest() {
+        Ocommand = new InsertCommand(engine, invoker, recorder, undoManager);
         invoker.playCommandConcrete("start");
         invoker.setTextToInsert("abcd");
         invoker.playCommand("insert");
         assertEquals("abcd", invoker.getTextToInsert());
-        assertTrue(recorder.getList()>0);
-        assertEquals(1,recorder.getList()); 
-    
+        assertTrue(recorder.getList() > 0);
+        assertEquals(1, recorder.getList());
 
     }
+
     @Test
-    void stopCommandTest(){
-        Ocommand=new InsertCommand(engine, invoker, recorder);
+    void stopCommandTest() {
+        Ocommand = new InsertCommand(engine, invoker, recorder, undoManager);
         invoker.playCommandConcrete("start");
         invoker.setTextToInsert("abcd");
         invoker.playCommand("insert");
         assertEquals("abcd", invoker.getTextToInsert());
-        assertEquals(1,recorder.getList());  
+        assertEquals(1, recorder.getList());
         invoker.playCommandConcrete("stop");
         invoker.playCommand("insert");
-        assertEquals(1,recorder.getList());
+        assertEquals(1, recorder.getList());
 
     }
+
     @Test
     @DisplayName("tester le replay avec une insertion")
-    void replayCommandTest(){
-        //commencer l'enregistrement
-        Ocommand=new InsertCommand(engine, invoker, recorder);
-        invoker.playCommandConcrete("start");
-        //insérer du text
-        invoker.setTextToInsert("abcd");
-        invoker.playCommand("insert");
-        assertEquals("abcd", invoker.getTextToInsert());
-
-        //vérifier que les commandes ont été bien enregistré
-        assertEquals(1,recorder.getList());  
-        invoker.playCommandConcrete("stop");
-        //rejouer les commandes enregistrés 
-        invoker.playCommandConcrete("replay");
-        assertEquals("abcd", invoker.getTextToInsert());
+    void replayCommandTest() {
+        // Démarrer l'enregistrement
+        recorder.start();
+        invoker.setTextToInsert("hello");
+        Ocommand = new InsertCommand(engine, invoker, recorder, undoManager);
+        
+        // Exécuter et vérifier l'insertion initiale
+        Ocommand.execute();
+        assertEquals("hello", engine.getBufferContents());
+        
+        // Arrêter l'enregistrement
+        recorder.stop();
+        
+        // Vérifier que la commande a bien été enregistrée
+        assertEquals(1, recorder.getList());
+        
+        // Replay et vérification
+        recorder.replay();
+        assertEquals("hellohello", engine.getBufferContents());
 
     }
+
     @Test
     @DisplayName("test du replay avec une copy dans le clipboard")
-    void replayCommandCopyTest(){
-        Ocommand=new InsertCommand(engine, invoker, recorder);
+    void replayCommandCopyTest() {
+        Ocommand = new InsertCommand(engine, invoker, recorder, undoManager);
         invoker.playCommandConcrete("start");
 
-        //insérer du text
+        // insérer du text
         invoker.setTextToInsert("abcd");
         invoker.playCommand("insert");
         assertEquals("abcd", invoker.getTextToInsert());
 
-        //selectionner le text et copier dans le clipboard
+        // selectionner le text et copier dans le clipboard
         invoker.setBeginIndex(1);
         invoker.setEndIndex(2);
         invoker.playCommand("selection");
         invoker.playCommand("copy");
         assertEquals("b", engine.getClipboardContents());
 
-        //vérifier que les commandes ont été bien enregistré
-        assertEquals(3,recorder.getList());  
+        // vérifier que les commandes ont été bien enregistré
+        assertEquals(3, recorder.getList());
         invoker.playCommandConcrete("stop");
 
-        //rejouer les commandes enregistrés 
+        // rejouer les commandes enregistrés
         invoker.playCommandConcrete("replay");
         assertEquals("abcd", invoker.getTextToInsert());
-       // assertEquals("b", engine.getClipboardContents());
+        // assertEquals("b", engine.getClipboardContents());
+    }
+
+    @Test
+    void undoTest() {
+        Ocommand = new InsertCommand(engine, invoker, recorder, undoManager);
+        invoker.setTextToInsert("abcd");
+        invoker.playCommand("insert");
+        assertEquals("abcd", invoker.getTextToInsert());
+        invoker.setTextToInsert("123");
+        invoker.playCommand("insert");
+
+        assertEquals("123", invoker.getTextToInsert());
+        invoker.playCommandConcrete("undo");
+
+        assertEquals("abcd", engine.getBufferContents());
+
+    }
+
+    @Test
+    void redoTest() {
+        Ocommand = new InsertCommand(engine, invoker, recorder, undoManager);
+        invoker.setTextToInsert("abcd");
+        invoker.playCommand("insert");
+        assertEquals("abcd", invoker.getTextToInsert());
+        invoker.setTextToInsert("123");
+        invoker.playCommand("insert");
+
+        assertEquals("123", invoker.getTextToInsert());
+        invoker.playCommandConcrete("undo");
+        assertEquals("abcd", engine.getBufferContents());
+
+        invoker.playCommandConcrete("redo");
+        assertEquals("abcd123", engine.getBufferContents());
+
     }
 }

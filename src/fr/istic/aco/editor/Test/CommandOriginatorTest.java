@@ -24,12 +24,10 @@ public class CommandOriginatorTest {
         engine = new EngineImpl();
         selection = engine.getSelection();
         recorder=new RecorderImpl();
+        undoManager=new UndoManager(engine);
         invoker = new Invoker(engine, selection,recorder,undoManager);
     }
 
-    private void todo() {
-        fail("Unimplemented test");
-    }
 
     @Test
     void insertCommandTest() {
