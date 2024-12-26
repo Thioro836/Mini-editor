@@ -9,57 +9,77 @@ import fr.istic.aco.editor.Memento.EditorMemento;
 
 public class UndoManager {
     private List<EditorMemento> pastStates;
-    private List<EditorMemento> futurStates;
+    private List<EditorMemento> futureStates;
     private Engine engine;
+    private EditorMemento currentState;
 
     public UndoManager(Engine engine) {
-        pastStates = new ArrayList<EditorMemento>();
-        futurStates = new ArrayList<EditorMemento>();
+        pastStates = new ArrayList<>();
+        futureStates = new ArrayList<>();
         this.engine = engine;
+        // Sauvegarder l'état initial
+        currentState = (EditorMemento) engine.getMemento();
     }
 
-    // enregistrer l'état de l'engine
     public void store() {
-        EditorMemento currentMemento = (EditorMemento)engine.getMemento();
-        System.out.println("Storing state: " + currentMemento.getBufferContent()+ "'");
-        pastStates.add(currentMemento);
-        futurStates.clear();
+        try {
+            EditorMemento newState = (EditorMemento) engine.getMemento();
+            if (newState == null) {
+                System.out.println("Error: Current memento is null");
+                return;
+            }
+            
+            // Ne stockez que si l'état a changé
+            if (!statesAreEqual(currentState, newState)) {
+                pastStates.add(currentState);
+                currentState = newState;
+                futureStates.clear(); // Effacer les états futurs car une nouvelle action a été effectuée
+                System.out.println("Storing state: " + newState.getBufferContent());
+            }
+        } catch (Exception e) {
+            System.out.println("Error in store(): " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    // revenir en arrière
-    
     public void undo() {
         if (!pastStates.isEmpty()) {
-            // Sauvegarde de l'état actuel
-            EditorMemento currentState = (EditorMemento)engine.getMemento();
-            System.out.println("Current state before undo: " + currentState.getBufferContent());
-            futurStates.add(0,currentState);
-    
-            // Restauration de l'état précédent
-            EditorMemento previousMemento = pastStates.remove(pastStates.size() - 1);
-            System.out.println("Restoring to previous state: " + previousMemento.getBufferContent());
-            engine.setMemento(previousMemento);
+            // Sauvegarder l'état actuel dans les états futurs
+            futureStates.add(currentState);
             
-            // Vérification après restauration
+            // Restaurer l'état précédent
+            currentState = pastStates.remove(pastStates.size() - 1);
+            System.out.println("Restoring to previous state: " + currentState.getBufferContent());
+            engine.setMemento(currentState);
+            
             System.out.println("Buffer content after setMemento: " + engine.getBufferContents());
         }
     }
 
     public void redo() {
-        if (!futurStates.isEmpty()) {
-            EditorMemento currentState = (EditorMemento)engine.getMemento();
+        if (!futureStates.isEmpty()) {
+            // Sauvegarder l'état actuel dans les états passés
             pastStates.add(currentState);
-            EditorMemento nextState = futurStates.remove(futurStates.size() - 1);
-            engine.setMemento(nextState);
+            
+            // Restaurer l'état suivant
+            currentState = futureStates.remove(futureStates.size() - 1);
+            engine.setMemento(currentState);
         }
+    }
 
+    private boolean statesAreEqual(EditorMemento state1, EditorMemento state2) {
+        if (state1 == null || state2 == null) return false;
+        return state1.getBufferContent().equals(state2.getBufferContent()) &&
+               state1.getBeginIndex() == state2.getBeginIndex() &&
+               state1.getEndIndex() == state2.getEndIndex() &&
+               state1.getClipboardContent().equals(state2.getClipboardContent());
     }
 
     public List<EditorMemento> getPastStates() {
         return this.pastStates;
     }
 
-    public List<EditorMemento> getFuturStates() {
-        return this.futurStates;
+    public List<EditorMemento> getFutureStates() {
+        return this.futureStates;
     }
 }

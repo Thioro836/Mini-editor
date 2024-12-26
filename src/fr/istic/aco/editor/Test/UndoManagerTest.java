@@ -1,143 +1,189 @@
 package fr.istic.aco.editor.Test;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import fr.istic.aco.editor.ClassImpl.EngineImpl;
 import fr.istic.aco.editor.ClassImpl.UndoManager;
 import fr.istic.aco.editor.Interface.Engine;
+import fr.istic.aco.editor.Interface.Memento;
 import fr.istic.aco.editor.Memento.EditorMemento;
 
 public class UndoManagerTest {
-      private UndoManager undoManager;
+    private UndoManager undoManager;
     private Engine engine;
 
-    @org.junit.jupiter.api.BeforeEach
+    @BeforeEach
     public void setUp() {
         engine = new EngineImpl();
         undoManager = new UndoManager(engine);
     }
 
-    // Cas de test pour vérifier si un état est bien stocké
+    
     @Test
-    public void testStoreState() {
-        //enregistre l'état initial du buffer
-        undoManager.store();
-        //insertion de text
-        engine.insert("abcd");
-        undoManager.store();
-
-        engine.insert("123");
-        undoManager.store();
-       
-
-        // Vérifier que l'état a été ajouté à la liste des états passés
-        assertEquals(3, undoManager.getPastStates().size());
-        assertEquals("abcd", undoManager.getPastStates().get(1).getBufferContent());
-        assertEquals("abcd123", undoManager.getPastStates().get(2).getBufferContent());
-       
-    }
-    @Test    
-    public void testStoreAndUndo() {
-        System.out.println("Initial buffer: " + engine.getBufferContents());
+    public void testInitialState() {
         assertEquals("", engine.getBufferContents());
+        assertEquals(0, undoManager.getPastStates().size());
+        assertEquals(0, undoManager.getFutureStates().size());
+    }
+
+  
+    @Test
+    public void testStoreMultipleStates() {
+        engine.insert("First");
+        undoManager.store();
+        engine.insert("Second");
+        undoManager.store();
+        engine.insert("Third");
+        undoManager.store();
+
+        assertEquals(3, undoManager.getPastStates().size());
+        assertEquals("FirstSecondThird", engine.getBufferContents());
+    }
+
+    @Test
+    public void testStoreDuplicateState() {
+        engine.insert("Test");
+        undoManager.store();
+        undoManager.store(); // Tentative de stocker le même état
         
-        engine.insert("abcd");  
-        undoManager.store();    
-        System.out.println("After first insert: " + engine.getBufferContents());
-        System.out.println("Past states size: " + undoManager.getPastStates().size());
-        assertEquals("abcd", engine.getBufferContents());
         assertEquals(1, undoManager.getPastStates().size());
+    }
+
+ 
+    @Test
+    public void testUndoRedoWithSelection() {
+        engine.insert("Hello World");
+        engine.getSelection().setBeginIndex(0);
+        engine.getSelection().setEndIndex(5);
+        undoManager.store();
+
+        engine.delete();
+        undoManager.store();
+
+        assertEquals(" World", engine.getBufferContents());
+        undoManager.undo();
+        assertEquals("Hello World", engine.getBufferContents());
+        assertEquals(0, engine.getSelection().getBeginIndex());
+        assertEquals(5, engine.getSelection().getEndIndex());
+    }
+
+  
+    @Test
+    public void testComplexUndoRedoSequence() {
+        // Séquence: insert -> undo -> insert -> redo
+        engine.insert("First");
+        undoManager.store();
+        engine.insert("Second");
+        undoManager.store();
         
-        engine.insert("123");  
-        undoManager.store();     
-        System.out.println("After second insert: " + engine.getBufferContents());
-        System.out.println("Past states size: " + undoManager.getPastStates().size());
-        assertEquals("abcd123", engine.getBufferContents());
-        assertEquals(2, undoManager.getPastStates().size());
+        undoManager.undo(); // Retour à "First"
+        assertEquals("First", engine.getBufferContents());
         
-        // Avant undo
-        System.out.println("\nBefore undo:");
-        System.out.println("Past states: ");
-        for(EditorMemento m : undoManager.getPastStates()) {
-            System.out.println(" - " + m.getBufferContent());
+        engine.insert("Third"); // Nouvelle branche
+        undoManager.store();
+        
+        // Le redo ne devrait pas être possible car nous avons créé une nouvelle branche
+        undoManager.redo();
+        assertEquals("FirstThird", engine.getBufferContents());
+    }
+
+    @Test
+    public void testMultipleUndoRedo() {
+        engine.insert("1");
+        undoManager.store();
+        engine.insert("2");
+        undoManager.store();
+        engine.insert("3");
+        undoManager.store();
+
+        // Trois undo
+        undoManager.undo();
+        undoManager.undo();
+        undoManager.undo();
+        assertEquals("", engine.getBufferContents());
+
+        // Trois redo
+        undoManager.redo();
+        undoManager.redo();
+        undoManager.redo();
+        assertEquals("123", engine.getBufferContents());
+    }
+
+    // Tests de cas limites
+    @Test
+    public void testUndoAfterClearingBuffer() {
+        engine.insert("Text");
+        undoManager.store();
+        engine.getSelection().setBeginIndex(0);
+        engine.getSelection().setEndIndex(4);
+        engine.delete();
+        undoManager.store();
+
+        assertEquals("", engine.getBufferContents());
+        undoManager.undo();
+        assertEquals("Text", engine.getBufferContents());
+    }
+
+    @Test
+    public void testClipboardState() {
+     
+        engine.insert("Copy this text");
+        undoManager.store();
+        
+        // "Copy"
+        engine.getSelection().setBeginIndex(0);
+        engine.getSelection().setEndIndex(4);
+        engine.copySelectedText();
+        undoManager.store();
+        assertEquals("Copy", engine.getClipboardContents());
+        
+        // 3. Couper "this"
+        engine.getSelection().setBeginIndex(5);
+        engine.getSelection().setEndIndex(9);
+        engine.cutSelectedText();
+        undoManager.store();
+        assertEquals("this", engine.getClipboardContents());
+        
+        // 4. Faire un undo 
+        undoManager.undo();
+        assertEquals("Copy this text", engine.getBufferContents());
+        assertEquals("Copy", engine.getClipboardContents());  
+    }
+
+    // Tests de robustesse
+    @Test
+    public void testUndoRedoWithEmptyStates() {
+        // Tester undo/redo quand il n'y a pas d'états
+        undoManager.undo();
+        undoManager.redo();
+        assertEquals("", engine.getBufferContents());
+    }
+
+    @Test
+    public void testInsertEmptyString() {
+        engine.insert("");
+        undoManager.store();
+        engine.insert("Text");
+        undoManager.store();
+        
+        undoManager.undo();
+        assertEquals("", engine.getBufferContents());
+    }
+
+    @Test
+    public void testUndoRedoWithMaxOperations() {
+        for(int i = 0; i < 100; i++) {
+            engine.insert(String.valueOf(i));
+            undoManager.store();
         }
         
-        undoManager.undo();
+        // Vérifions que tous les undo fonctionnent
+        for(int i = 0; i < 100; i++) {
+            undoManager.undo();
+        }
         
-        // Après undo
-        System.out.println("\nAfter undo:");
-        System.out.println("Buffer content: " + engine.getBufferContents());
-        System.out.println("Past states size: " + undoManager.getPastStates().size());
-        System.out.println("Future states size: " + undoManager.getFuturStates().size());
-        
-        assertEquals("abcd", engine.getBufferContents());
-        assertEquals(1, undoManager.getPastStates().size());
-        assertEquals(1, undoManager.getFuturStates().size());
-    }
-
-
-    // Cas de test pour vérifier que undo revient bien à l'état précédent
-    @Test
-    public void testUndoState() {
-        // Sauvegarder l'état initial
-        undoManager.store();
-
-        // Changer l'état de l'éditeur
-        engine.insert("abcd");
-        undoManager.store();
-        System.out.println("After inserting 'abcd': " + engine.getBufferContents());
-
-        engine.insert("123");
-        undoManager.store();
-        System.out.println("After inserting '123': " + engine.getBufferContents());
-        // Effectuer un undo
-        undoManager.undo();
-
-        // Vérifier que l'état est revenu à l'état précédent
-        assertEquals("abcd", engine.getBufferContents());
-    }
-
-    // Cas de test pour vérifier que redo fonctionne après un undo
-    @Test
-    public void testRedoState() {
-        // Sauvegarder l'état initial
-        undoManager.store();
-
-        // Changer l'état de l'éditeur
-        engine.insert("abcd");
-        undoManager.store();
-
-        // Effectuer un undo
-        undoManager.undo();
         assertEquals("", engine.getBufferContents());
-        // Effectuer un redo
-        undoManager.redo();
-
-        // Vérifier que l'état est revenu à "New State"
-        assertEquals("abcd", engine.getBufferContents());
-    }
-
-    // Cas de test pour vérifier le comportement lorsque l'historique d'annulation est vide
-    @Test
-    public void testUndoWithoutStates() {
-        engine.insert("abcd");
-        // Effectuer un undo sans avoir stocké d'état
-        undoManager.undo();
-
-        // Vérifier que l'état n'a pas changé
-        assertEquals("abcd", engine.getBufferContents());
-    }
-
-    // Cas de test pour vérifier le comportement lorsque l'historique de reprise est vide
-    @Test
-    public void testRedoWithoutStates() {
-        engine.insert("abcd");
-        // Effectuer un redo sans avoir stocké d'état
-        undoManager.redo();
-
-        // Vérifier que l'état n'a pas changé
-        assertEquals("abcd", engine.getBufferContents());
     }
 }

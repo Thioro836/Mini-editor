@@ -31,13 +31,14 @@ public class SelectionCommand implements CommandOriginator {
         if (!recorder.isReplaying()) {
             this.begin = inv.getBeginIndex();
             this.end = inv.getEndIndex();
+            
         }
 
         selection.setBeginIndex(this.begin);
         selection.setEndIndex(this.end);
-
-        recorder.save(this);
         undoManager.store();
+        recorder.save(this);
+      
         System.out.println("Sélection enregistrée: Begin Index: " + selection.getBeginIndex() + ", End Index: "
                 + selection.getEndIndex());
 

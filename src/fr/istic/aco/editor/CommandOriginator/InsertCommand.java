@@ -28,9 +28,11 @@ public class InsertCommand implements CommandOriginator {
     public void execute() {
         if (!recorder.isReplaying()) {
             this.textToInsert = inv.getTextToInsert();
+          
         }
-        undoManager.store();
+       
         engine.insert(textToInsert);
+        undoManager.store();
         recorder.save(this);
        
     }
