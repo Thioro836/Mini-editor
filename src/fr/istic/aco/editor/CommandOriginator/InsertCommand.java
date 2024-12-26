@@ -21,7 +21,7 @@ public class InsertCommand implements CommandOriginator {
     private Invoker inv;
     private String textToInsert;
     private Recorder recorder;
-    private boolean recording=true;
+    private boolean recording = true;
 
     /**
      * Constructs an {@code InsertCommand} with the specified engine, invoker, and
@@ -55,7 +55,6 @@ public class InsertCommand implements CommandOriginator {
         engine.insert(textToInsert);
         recorder.save(this);
     }
-
 
     /**
      * Gets the memento for this command. It creates and returns an

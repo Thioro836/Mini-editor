@@ -89,17 +89,27 @@ public class RecorderImpl implements Recorder {
     @Override
     public void replay() {
         replaying = true;
-        historique.addAll(liste);
-        for (Pair<CommandOriginator, Memento> pair : liste) {
+        try {
+            historique.addAll(liste);
+            for (Pair<CommandOriginator, Memento> pair : liste) {
+                if (pair == null || pair.getCommandOriginator() == null || pair.getMemento() == null) {
+                    System.err.println("Invalid pair in recording list");
+                    continue;
+                }
 
-            CommandOriginator command = pair.getCommandOriginator();
-            Memento memento = pair.getMemento();
+                CommandOriginator command = pair.getCommandOriginator();
+                Memento memento = pair.getMemento();
 
-            command.setMemento(memento);
-            command.execute();
+                try {
+                    command.setMemento(memento);
+                    command.execute();
+                } catch (Exception e) {
+                    System.err.println("Error replaying command: " + e.getMessage());
+                }
+            }
+        } finally {
+            replaying = false;
         }
-
-        replaying = false;
     }
 
     /**

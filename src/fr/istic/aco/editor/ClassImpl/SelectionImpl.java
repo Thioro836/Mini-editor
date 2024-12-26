@@ -90,7 +90,7 @@ public class SelectionImpl implements Selection {
      * @throws IndexOutOfBoundsException if the beginIndex is out of bounds
      */
     public void setBeginIndex(int beginIndex) {
-        if (beginIndex < 0) {
+        if (beginIndex < 0 || beginIndex > getBufferEndIndex()) {
             throw new IndexOutOfBoundsException("Begin index out of bounds");
         }
         this.beginIndex = beginIndex;

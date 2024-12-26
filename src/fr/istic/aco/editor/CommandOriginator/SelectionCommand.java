@@ -65,7 +65,6 @@ public class SelectionCommand implements CommandOriginator {
 
     }
 
-
     /**
      * Gets the memento for this command, capturing the current selection state.
      * This includes the begin and end indices of the selection.
@@ -79,7 +78,6 @@ public class SelectionCommand implements CommandOriginator {
         return new SelectMemento(begin, end);
     }
 
-
     /**
      * Sets the memento for this command, restoring the selection state.
      * The begin and end indices are set from the provided {@link SelectMemento}.
@@ -88,11 +86,11 @@ public class SelectionCommand implements CommandOriginator {
      */
     @Override
     public void setMemento(Memento memento) {
+
         SelectMemento selectMemento = (SelectMemento) memento;
         this.begin = selectMemento.getBeginIndex();
         this.end = selectMemento.getEndIndex();
 
     }
-
 
 }

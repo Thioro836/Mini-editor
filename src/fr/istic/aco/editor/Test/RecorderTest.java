@@ -109,5 +109,4 @@ public class RecorderTest {
         recorder.replay();
         assertEquals("", engine.getBufferContents()); // Le tampon devrait être vide
     }
-
 }
