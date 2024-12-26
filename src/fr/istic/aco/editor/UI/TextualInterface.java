@@ -6,19 +6,51 @@ import fr.istic.aco.editor.ClassImpl.UndoManager;
 import fr.istic.aco.editor.Interface.Engine;
 import fr.istic.aco.editor.Interface.Selection;
 
+/**
+ * The {@code TextualInterface} class represents a simple command-line interface
+ * (CLI) for interacting
+ * with the text editor. It allows the user to perform various actions such as
+ * inserting, cutting, copying,
+ * pasting text, managing selections, and executing undo/redo operations. The
+ * interface interacts with the
+ * underlying {@code Engine}, {@code UndoManager}, and {@code Invoker} to
+ * process the commands entered by the user.
+ * 
+ * The class runs an interactive loop where the user is prompted to enter
+ * commands. Each command triggers a
+ * corresponding action on the editor, such as modifying text, updating the
+ * selection, or manipulating the clipboard.
+ * Additionally, the user can start and stop recording commands, replay recorded
+ * commands, and perform undo/redo actions.
+ * 
+ */
 public class TextualInterface {
     private Invoker invoker;
     private Scanner scanner;
     private Engine engine;
     private UndoManager undoManager;
 
-    public TextualInterface(Invoker invoker, Engine engine,UndoManager undoManager) {
+    /**
+     * Constructs a new {@code TextualInterface} with the specified components.
+     * 
+     * @param invoker     the {@code Invoker} responsible for executing commands
+     * @param engine      the {@code Engine} that manages the text buffer and
+     *                    selection
+     * @param undoManager the {@code UndoManager} responsible for handling undo and
+     *                    redo operations
+     */
+    public TextualInterface(Invoker invoker, Engine engine, UndoManager undoManager) {
         this.invoker = invoker;
         this.engine = engine;
-        this.undoManager=undoManager;
+        this.undoManager = undoManager;
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Starts the command-line interface, prompting the user for commands and
+     * executing the corresponding actions.
+     * The loop continues until the user chooses to exit.
+     */
     public void start() {
         System.out.println("Welcome to our text editor");
 
@@ -91,6 +123,10 @@ public class TextualInterface {
         }
     }
 
+    /**
+     * Handles the 'insert' command by prompting the user to enter text to insert
+     * into the editor.
+     */
     private void handleInsert() {
         System.out.print("Enter the text to insert: ");
         String text = scanner.nextLine();
@@ -99,6 +135,10 @@ public class TextualInterface {
         showText();
     }
 
+    /**
+     * Handles the 'selection' command by prompting the user to input the start and
+     * end indices of the selection.
+     */
     private void handleSelection() {
         System.out.print("Start of selection index: ");
         int begin = scanner.nextInt();
@@ -111,11 +151,17 @@ public class TextualInterface {
 
     }
 
+    /**
+     * Displays the current content of the text buffer.
+     */
     private void showText() {
         String currentText = engine.getBufferContents();
         System.out.println("Buffer content: " + currentText);
     }
 
+    /**
+     * Displays the current contents of the clipboard.
+     */
     private void showClipboard() {
         String clipboardContent = engine.getClipboardContents();
         System.out.println("Clipboard content: " + clipboardContent);

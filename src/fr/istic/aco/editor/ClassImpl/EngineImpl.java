@@ -8,19 +8,27 @@ import fr.istic.aco.editor.Interface.Recorder;
 import fr.istic.aco.editor.Interface.Selection;
 import fr.istic.aco.editor.Memento.EditorMemento;
 
+/**
+ * Implementation of the {@link Engine} interface for a text editor.
+ * This class provides functionalities to manipulate a text buffer,
+ * manage a clipboard, and handle text selection.
+ * <p>
+ * It supports operations such as inserting text, copying and pasting from
+ * the clipboard, cutting selected text, and managing the editor state using
+ * the memento design pattern.
+ * </p>
+ */
 public class EngineImpl implements Engine {
     private StringBuilder buffer;
     private String clipboard;
     private SelectionImpl selection;
     private int begin, end;
-    // private UndoManager undoManager;
 
-    /* constructeur de la classe */
+    /** Constructs an {@code EngineImpl} with an empty buffer and clipboard. */
     public EngineImpl() {
         this.buffer = new StringBuilder();
         this.clipboard = "";
         this.selection = new SelectionImpl(buffer);
-        // undoManager = new UndoManager(this);
 
     }
 
@@ -121,9 +129,17 @@ public class EngineImpl implements Engine {
         selection.setEndIndex(selection.getBeginIndex());
     }
 
+    /**
+     * Creates and returns a {@link Memento} object representing the current
+     * state of the engine.
+     *
+     * @return a {@link Memento} object containing the buffer content, selection
+     *         indices,
+     *         and clipboard content
+     */
     @Override
     public Memento getMemento() {
-         String currentBuffer = buffer.toString();
+        String currentBuffer = buffer.toString();
         String currentClipboard = clipboard != null ? clipboard : "";
         return new EditorMemento(
                 currentBuffer,
@@ -131,6 +147,12 @@ public class EngineImpl implements Engine {
                 selection.getEndIndex(),
                 currentClipboard);
     }
+
+    /**
+     * Restores the state of the engine from the given {@link Memento}.
+     *
+     * @param m the {@link Memento} object containing the state to restore
+     */
 
     @Override
     public void setMemento(Memento m) {

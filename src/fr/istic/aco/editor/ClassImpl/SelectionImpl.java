@@ -2,12 +2,24 @@ package fr.istic.aco.editor.ClassImpl;
 
 import fr.istic.aco.editor.Interface.Selection;
 
+/**
+ * Implementation of the Selection interface, representing a selection in the
+ * buffer.
+ * Provides methods for accessing and modifying the start and end indices of the
+ * selection,
+ * as well as managing the buffer's bounds.
+ */
+
 public class SelectionImpl implements Selection {
 
     private StringBuilder buffer;
     private Integer beginIndex;
     private Integer endIndex;
     private Integer bufferBeginIndex;
+
+    /**
+     * Default constructor initializing an empty selection with default indices.
+     */
 
     public SelectionImpl() {
         this.buffer = new StringBuilder();
@@ -16,6 +28,12 @@ public class SelectionImpl implements Selection {
         this.bufferBeginIndex = 0;
 
     }
+
+    /**
+     * Constructor that initializes the selection with a provided buffer.
+     *
+     * @param buffer the buffer associated with this selection
+     */
 
     public SelectionImpl(StringBuilder buffer) {
         this.buffer = buffer;
@@ -28,7 +46,7 @@ public class SelectionImpl implements Selection {
      * Provides the index of the first character designated
      * by the selection.
      *
-     * @return
+     * @return the begin index
      */
     public int getBeginIndex() {
         return beginIndex;
